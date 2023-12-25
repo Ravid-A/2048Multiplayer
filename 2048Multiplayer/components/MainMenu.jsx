@@ -4,8 +4,7 @@ export default function MainMenu() {
   const onClick = (event) => {
     console.log("clicked", event.target.value);
 
-    //redirect to the appropriate page
-    window.location.href = "/" + event.target.value;
+    document.location.href = "/" + event.target.value;
   };
 
   return (
@@ -20,41 +19,30 @@ export default function MainMenu() {
           <button
             className={styles.MenuButton}
             onClick={onClick}
-            value="practice"
+            value="classic"
           >
-            Practice (OFFLINE)
+            Classic 2048
           </button>
           <button
             className={styles.MenuButton}
             onClick={onClick}
-            value="together"
+            value="multiplayer"
           >
-            Together (ONLINE)
-          </button>
-          {false && (
-            <button
-              className={styles.MenuButton}
-              onClick={onClick}
-              value="competition"
-              disabled={true}
-            >
-              Competition (ONLINE)
-            </button>
-          )}
-          <button
-            className={styles.MenuButton}
-            onClick={onClick}
-            value="leaderboard"
-          >
-            Leaderboard
+            Multiplayer
           </button>
           <button
             className={styles.MenuButton}
             onClick={onClick}
-            value="rules"
-            disabled={true}
+            value="speedrun"
           >
-            Rules
+            Speedrun
+          </button>
+          <button
+            className={styles.MenuButton}
+            onClick={onClick}
+            value="private"
+          >
+            Private Lobby
           </button>
         </div>
       </div>
