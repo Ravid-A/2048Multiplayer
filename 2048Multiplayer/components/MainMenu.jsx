@@ -2,8 +2,6 @@ import styles from "../styles/MainMenu.module.css";
 
 export default function MainMenu() {
   const onClick = (event) => {
-    console.log("clicked", event.target.value);
-
     document.location.href = "/" + event.target.value;
   };
 
