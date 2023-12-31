@@ -1,5 +1,3 @@
-//import styles from "../styles/GamePanel.module.css";
-
 export default function GamePanel({ tiles = [], online = false }) {
   return (
     <>

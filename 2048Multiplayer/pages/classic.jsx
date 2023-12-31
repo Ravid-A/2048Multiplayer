@@ -6,6 +6,8 @@ import GameHeading from "../components/GameHeading";
 import GameControls from "../components/GameControls";
 import GamePanel from "../components/GamePanel";
 
+import "../styles/Classic.module.css";
+
 export default function Classic() {
   const [game, setGame] = useState(new CGame());
 
