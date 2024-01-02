@@ -1,43 +1,37 @@
+/* styles/MainMenu.module.css */
+
 .MainMenu {
   background-color: #bbada0;
-  border-radius: 6px;
+  border-radius: 12px;
   padding: 10px;
-  width: 750px;
+  width: 80%;
+  max-width: 500px;
   height: fit-content;
-
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  margin: 5% auto;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
 }
 
 .Titles {
   font-weight: bold;
   font-family: fantasy;
-
   height: fit-content;
-
   text-align: center;
-
   margin-top: 5%;
 }
 
 .Title {
-  font-size: 85px;
+  font-size: 50px;
   color: #776e65;
 }
 
 .SubTitle {
-  font-size: 30px;
+  font-size: 20px;
   color: #773e65;
-
   width: fit-content;
-
   border: 2px solid lightcoral;
   border-radius: 6px;
   background: lightcoral;
-
-  transform: translate(275%, -50%);
+  transform: translate(20vw, -40%);
 }
 
 .Menu {
@@ -45,25 +39,45 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  margin-top: 5%;
-  margin-bottom: 5%;
+  margin-top: 20px;
 }
 
 .MenuButton {
-  font-size: 38px;
+  font-size: 1.2em;
   color: #eee4da;
-
-  width: 300px;
-  height: 100px;
-
+  width: 80%;
+  max-width: 300px;
+  height: 3em;
   border: 2px solid lightcoral;
-  border-radius: 6px;
+  border-radius: 8px;
   background: lightcoral;
-
   margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .MenuButton:hover {
   background: #f59797;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 600px) {
+  .MainMenu {
+    width: 90%;
+  }
+
+  .Title {
+    font-size: 2em;
+  }
+
+  .SubTitle {
+    font-size: 1em;
+    transform: translate(5px, -50%);
+  }
+
+  .MenuButton {
+    font-size: 1em;
+    height: 2.5em;
+    margin-bottom: 8px;
+  }
 }

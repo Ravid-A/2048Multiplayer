@@ -5,11 +5,11 @@ import Link from "next/link";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import styles from "../styles/RegisterForm.module.css";
+
 import LoggedInPopUP from "./LoggedInPopUP";
 
-import styles from "../styles/LoginForm.module.css";
-
-export default function LoginForm({
+export default function RegisterForm({
   handleSubmit,
   user,
   setUser,
@@ -20,6 +20,7 @@ export default function LoginForm({
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (event) => {
     setUser({ ...user, [event.target.id]: event.target.value, msg: "" });
@@ -33,9 +34,13 @@ export default function LoginForm({
     setShowPassword(!showPassword);
   };
 
+  const handleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
-    <div className={styles.login}>
-      <div className={styles.login_container}>
+    <div className={styles.register}>
+      <div className={styles.register_container}>
         <div
           className={styles.backButton}
           disabled={loggedIn}
@@ -47,22 +52,30 @@ export default function LoginForm({
           <div className={styles.Title}>2048</div>
           <div className={styles.SubTitle}>Multiplayer</div>
         </div>
-        <div className={styles.login_form}>
+        <div className={styles.register_form}>
           <input
-            id="identifier"
+            id="username"
             type="text"
             onChange={handleChange}
+            placeholder="Username"
+            value={user.username}
             disabled={loggedIn || loading}
-            placeholder="Email/Username"
-            value={user.identifier}
+          />
+          <input
+            id="email"
+            type="text"
+            onChange={handleChange}
+            placeholder="Email"
+            value={user.email}
+            disabled={loggedIn || loading}
           />
           <input
             id="password"
             type={showPassword ? "text" : "password"}
             onChange={handleChange}
-            disabled={loggedIn || loading}
             placeholder="Password"
             value={user.password}
+            disabled={loggedIn || loading}
           />
           <button
             type="button"
@@ -71,17 +84,32 @@ export default function LoginForm({
           >
             <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
           </button>
-          <Link className={styles.Link} href="/register">
-            Don't have an account? Register here
+          <input
+            id="confirm_password"
+            type={showConfirmPassword ? "text" : "password"}
+            onChange={handleChange}
+            placeholder="Confirm Password"
+            value={user.confirm_password}
+            disabled={loggedIn || loading}
+          />
+          <button
+            type="button"
+            className={styles.showPasswordButton}
+            onClick={handleShowConfirmPassword}
+          >
+            <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />
+          </button>
+          <Link className={styles.Link} href="/login">
+            Have an account? Login here
           </Link>
           <br />
           <br />
           <button
-            className={styles.login_button}
+            className={styles.register_button}
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={loggedIn || loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            Register
           </button>
           {user.msg && <div className={styles.error}>{user.msg}</div>}
         </div>

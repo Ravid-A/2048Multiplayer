@@ -1,8 +1,12 @@
+import { useRouter } from "next/router";
+
 import styles from "../styles/MainMenu.module.css";
 
 export default function MainMenu() {
+  const router = useRouter();
+
   const onClick = (event) => {
-    document.location.href = "/" + event.target.value;
+    router.push("/" + event.target.value);
   };
 
   return (

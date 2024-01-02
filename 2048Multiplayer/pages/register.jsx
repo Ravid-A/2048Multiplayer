@@ -1,14 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import LoginForm from "../components/LoginForm";
 import CheckUser from "../utilities/CheckUser";
 import GetAPIUrl from "../utilities/GetAPIUrl";
 
-export default function Login() {
+import RegisterForm from "../components/RegisterForm";
+
+export default function Register() {
   const router = useRouter();
 
-  const [user, setUser] = useState({ identifier: "", password: "", msg: "" });
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+    msg: "",
+  });
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -27,7 +34,12 @@ export default function Login() {
   }, []);
 
   const handleSubmit = () => {
-    if (!user.identifier || !user.password) {
+    if (
+      !user.username ||
+      !user.email ||
+      !user.password ||
+      !user.confirm_password
+    ) {
       setUser({ ...user, msg: "Please fill all the fields" });
       return;
     }
@@ -37,16 +49,35 @@ export default function Login() {
       return;
     }
 
-    handleLogin();
+    if (user.password.match(/[A-Z]/) == null) {
+      setUser({ ...user, msg: "Password must contain at least 1 uppercase" });
+      return;
+    }
+
+    if (
+      user.password.match(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) == null
+    ) {
+      setUser({ ...user, msg: "Password must contain at least 1 symbol" });
+      return;
+    }
+
+    if (user.password !== user.confirm_password) {
+      setUser({ ...user, msg: "Passwords do not match" });
+      return;
+    }
+
+    handleRegister();
   };
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     try {
       setLoading(true);
 
-      const url = GetAPIUrl() + "/users/login";
+      const url = GetAPIUrl() + "/users/register";
+
       const data = {
-        identifier: user.identifier,
+        username: user.username,
+        email: user.email,
         password: user.password,
       };
 
@@ -56,19 +87,19 @@ export default function Login() {
         body: JSON.stringify(data),
       });
 
-      const login = await response.json();
+      const register = await response.json();
 
       if (response.status === 200) {
-        if (login.error) {
-          setUser({ ...user, msg: login.message });
+        if (register.error) {
+          setUser({ ...user, msg: register.message });
           return;
         }
 
-        localStorage.setItem("token", login.token);
+        localStorage.setItem("token", register.token);
         router.push("/");
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("An unexpected error happened:", error);
     } finally {
       setLoading(false);
     }
@@ -76,7 +107,7 @@ export default function Login() {
 
   return (
     <>
-      <LoginForm
+      <RegisterForm
         handleSubmit={handleSubmit}
         user={user}
         setUser={setUser}

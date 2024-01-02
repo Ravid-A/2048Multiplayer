@@ -1,6 +1,4 @@
-import CGame from "../utilities/CGame";
-
-export default function GameControls({ game: CGame, setGame }) {
+export default function GameControls({ game, setGame }) {
   return (
     <div>
       <p>

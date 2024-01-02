@@ -1,10 +1,11 @@
 import GetAPIUrl from "./GetAPIUrl";
 
-const CheckUser = () => {
+const CheckUser = async () => {
   try {
     const token = localStorage.getItem("token");
     if (token) {
-      return verifyUser(token);
+      const user = await verifyUser(token);
+      return user;
     } else {
       return false;
     }
@@ -16,16 +17,12 @@ const CheckUser = () => {
 const verifyUser = async (token) => {
   try {
     const response = await fetch(`${GetAPIUrl()}/users/verify`, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ token: token }),
     });
-
-    if (response.status == 400) {
-      return false;
-    }
 
     const data = await response.json();
     return data.found;

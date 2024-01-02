@@ -5,8 +5,9 @@ import GenerateToken from "./GenerateToken.js";
 const Authenticate = async (user, password) => {
   if (user == null) {
     return {
-      status: 400,
+      status: 200,
       data: {
+        error: true,
         message: "Account not found",
       },
     };
@@ -25,8 +26,9 @@ const Authenticate = async (user, password) => {
       };
     } else {
       return {
-        status: 400,
+        status: 200,
         data: {
+          error: true,
           message: "Incorrect password",
         },
       };
