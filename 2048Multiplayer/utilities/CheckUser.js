@@ -5,6 +5,11 @@ const CheckUser = async () => {
     const token = localStorage.getItem("token");
     if (token) {
       const user = await verifyUser(token);
+
+      if (!user) {
+        localStorage.removeItem("token");
+      }
+
       return user;
     } else {
       return false;

@@ -53,7 +53,7 @@ export default function LoginForm({
             type="text"
             onChange={handleChange}
             disabled={loggedIn || loading}
-            placeholder="Email/Username"
+            placeholder="Email / Username"
             value={user.identifier}
           />
           <input
