@@ -94,4 +94,140 @@ router.post("/verify", async (req, res) => {
   }
 });
 
+router.get("/getdata/:token", async (req, res) => {
+  const { token } = req.params;
+
+  if (token == null) {
+    return res.status(200).json({
+      message: "Token not found",
+      found: false,
+    });
+  }
+
+  try {
+    const decoded = await jwt.verify(token, process.env.JWT_TOKEN);
+
+    const user = await Account.findByPk(decoded.id);
+
+    return res.status(200).json({
+      message: "OK",
+      found: user != null,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(200).json({
+      message: "Invalid token",
+      found: false,
+    });
+  }
+});
+
+router.post("/update", async (req, res) => {
+  const { token, username, email } = req.body;
+
+  if (token == null) {
+    return res.status(200).json({
+      data: {
+        error: true,
+        message: "token not found",
+      },
+    });
+  }
+
+  try {
+    const decoded = await jwt.verify(token, process.env.JWT_TOKEN);
+
+    const user = await Account.findByPk(decoded.id);
+
+    if (user == null) {
+      return res.status(200).json({
+        data: {
+          error: true,
+          message: "user not found",
+        },
+      });
+    }
+
+    const data_to_update = {
+      username: user.username,
+      email: user.email,
+    };
+
+    if (username != null) {
+      data_to_update.username = username;
+    }
+
+    if (email != null) {
+      data_to_update.email = email;
+    }
+
+    const updated_user = await Account.update(data_to_update, {
+      where: {
+        id: decoded.id,
+      },
+    });
+
+    return res.status(200).json({
+      data: {
+        token: await GenerateToken(updated_user),
+        message: "user updated successfully",
+      },
+    });
+  } catch (error) {
+    return res.status(200).json({
+      data: {
+        error: true,
+        message: "invalid token",
+      },
+    });
+  }
+});
+
+router.delete("/delete", async (req, res) => {
+  const { token } = req.body;
+
+  if (token == null) {
+    return res.status(200).json({
+      data: {
+        error: true,
+        message: "token not found",
+      },
+    });
+  }
+
+  try {
+    const decoded = await jwt.verify(token, process.env.JWT_TOKEN);
+
+    const user = await Account.findByPk(decoded.id);
+
+    if (user == null) {
+      return res.status(200).json({
+        data: {
+          error: true,
+          message: "user not found",
+        },
+      });
+    }
+
+    await Account.destroy({
+      where: {
+        id: decoded.id,
+      },
+    });
+
+    return res.status(200).json({
+      data: {
+        message: "user deleted successfully",
+      },
+    });
+  } catch (error) {
+    return res.status(200).json({
+      data: {
+        error: true,
+        message: "invalid token",
+      },
+    });
+  }
+});
+
 export default router;
