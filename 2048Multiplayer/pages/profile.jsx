@@ -15,7 +15,10 @@ export default function ProfilePage() {
   const getUser = async () => {
     const user_data = await GetUser();
 
-    if (!user_data) router.push("/");
+    if (!user_data) {
+      router.push("/");
+      return;
+    }
 
     setUser({
       placeholder: {
@@ -32,28 +35,29 @@ export default function ProfilePage() {
     try {
       setLoading(true);
 
+      const token = localStorage.getItem("token");
       const url = GetAPIUrl() + "/users/update";
       const data = {
-        token: localStorage.getItem("token"),
         username: user.username,
         email: user.email,
       };
 
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(data),
       });
 
       const update = await response.json();
-      if (response.status === 200) {
-        if (update.error) {
-          setUser({ ...user, msg: update.message });
-          return;
-        }
-
-        router.reload();
+      if (update.data.error) {
+        setUser({ ...user, msg: update.data.message });
+        return;
       }
+
+      router.reload();
     } catch (error) {
       console.error("Error during update:", error);
     } finally {

@@ -14,7 +14,6 @@ export default function MainMenu() {
 
   const getUser = async () => {
     const user = await GetUser();
-    console.log(user);
     setUser(user);
   };
 

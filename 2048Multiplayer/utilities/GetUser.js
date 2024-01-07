@@ -6,11 +6,11 @@ const GetUser = async () => {
     if (token) {
       const user = await getUser(token);
 
-      if (!user.found) {
+      if (user.error) {
         localStorage.removeItem("token");
       }
 
-      return user.data;
+      return user.user_data;
     }
   } catch (error) {
     return {
@@ -22,10 +22,11 @@ const GetUser = async () => {
 
 const getUser = async (token) => {
   try {
-    const response = await fetch(`${GetAPIUrl()}/users/getdata/${token}`, {
+    const response = await fetch(`${GetAPIUrl()}/users/getdata`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -34,7 +35,7 @@ const getUser = async (token) => {
   } catch (error) {
     return {
       message: error.message,
-      found: false,
+      error: true,
     };
   }
 };

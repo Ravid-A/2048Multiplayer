@@ -27,6 +27,7 @@ export default function RegisterForm({
   };
 
   const handleBackButton = () => {
+    if (loading || loggedIn) return;
     router.push("/");
   };
 
@@ -41,11 +42,7 @@ export default function RegisterForm({
   return (
     <div className={styles.register}>
       <div className={styles.register_container}>
-        <div
-          className={styles.backButton}
-          disabled={loggedIn}
-          onClick={handleBackButton}
-        >
+        <div className={styles.backButton} onClick={handleBackButton}>
           ←
         </div>
         <div className={styles.Titles}>

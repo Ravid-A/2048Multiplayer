@@ -26,6 +26,7 @@ export default function LoginForm({
   };
 
   const handleBackButton = () => {
+    if (loading || loggedIn) return;
     router.push("/");
   };
 
@@ -36,11 +37,7 @@ export default function LoginForm({
   return (
     <div className={styles.login}>
       <div className={styles.login_container}>
-        <div
-          className={styles.backButton}
-          disabled={loggedIn}
-          onClick={handleBackButton}
-        >
+        <div className={styles.backButton} onClick={handleBackButton}>
           ←
         </div>
         <div className={styles.Titles}>

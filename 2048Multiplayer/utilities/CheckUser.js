@@ -25,12 +25,12 @@ const verifyUser = async (token) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ token: token }),
     });
 
     const data = await response.json();
-    return data.found;
+    return !data.error;
   } catch (error) {
     return false;
   }
