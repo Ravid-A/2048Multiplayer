@@ -53,14 +53,6 @@ export default function ChangePasswordPopUP({ setPopup }) {
       return;
     }
 
-    if (user.oldPassword === user.newPassword) {
-      setUser({
-        ...user,
-        msg: "New password must be different from old password",
-      });
-      return;
-    }
-
     if (user.newPassword.length < 8) {
       setUser({ ...user, msg: "Password must be at least 8 characters" });
       return;
@@ -95,12 +87,13 @@ export default function ChangePasswordPopUP({ setPopup }) {
       });
 
       const update = await response.data;
-      if (update.error) {
-        setUser({ ...user, msg: update.message });
+
+      if (update.data.error) {
+        setUser({ ...user, msg: update.data.message });
         return;
       }
 
-      router.reload();
+      setPopup("none");
     } catch (error) {
       setUser({
         ...user,

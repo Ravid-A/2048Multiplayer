@@ -61,7 +61,8 @@ export default function ProfilePage() {
         return;
       }
 
-      router.reload();
+      getUser();
+      setUser(null);
     } catch (error) {
       setUser({
         ...user,
