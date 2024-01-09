@@ -14,8 +14,6 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   const { email, password, username } = req.body;
 
-  const hash_password = await bcryptjs.hash(password, 10);
-
   let user = await Account.findAll({ where: { email: email } });
 
   if (user.length != 0) {
@@ -33,6 +31,8 @@ router.post("/register", async (req, res) => {
       message: "Account already exists with this username",
     });
   }
+
+  const hash_password = await bcryptjs.hash(password, 10);
 
   Account.create({
     email: email,
@@ -157,6 +157,15 @@ router.post("/updatepassword", protect, async (req, res) => {
 
     if (response.data.error) {
       return res.status(response.status).json(response.data);
+    }
+
+    if (await bcryptjs.compare(new_password, user.password)) {
+      return res.status(400).json({
+        data: {
+          error: true,
+          message: "New password cannot be same as old password",
+        },
+      });
     }
 
     const hash_password = await bcryptjs.hash(new_password, 10);
