@@ -19,7 +19,7 @@ router.post("/register", async (req, res) => {
   let user = await Account.findAll({ where: { email: email } });
 
   if (user.length != 0) {
-    return res.status(200).json({
+    return res.status(400).json({
       error: true,
       message: "Account already exists with this email",
     });
@@ -28,7 +28,7 @@ router.post("/register", async (req, res) => {
   user = await Account.findAll({ where: { username: username } });
 
   if (user.length != 0) {
-    return res.status(200).json({
+    return res.status(400).json({
       error: true,
       message: "Account already exists with this username",
     });
@@ -49,8 +49,8 @@ router.post("/register", async (req, res) => {
     })
     .catch((error) => {
       res.status(500).json({
-        message: "Internal server error: Cannot create account",
-        error: error.message,
+        message: error.message,
+        error: true,
       });
     });
 });
@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
   let user = await Account.findOne({ where: { email: identifier } });
   let response = await Authenticate(user, password);
 
-  if (response.data.error) {
+  if (response.data.type == "account_not_found") {
     user = await Account.findOne({ where: { username: identifier } });
     response = await Authenticate(user, password);
   }
@@ -98,7 +98,7 @@ router.post("/update", protect, async (req, res) => {
       const user = await Account.findOne({ where: { username: username } });
 
       if (user != null) {
-        return res.status(200).json({
+        return res.status(400).json({
           data: {
             error: true,
             message: "Username already exists",
@@ -113,7 +113,7 @@ router.post("/update", protect, async (req, res) => {
       const user = await Account.findOne({ where: { email: email } });
 
       if (user != null) {
-        return res.status(200).json({
+        return res.status(400).json({
           data: {
             error: true,
             message: "Email already exists",
@@ -156,12 +156,7 @@ router.post("/updatepassword", protect, async (req, res) => {
     const response = await Authenticate(user, old_password);
 
     if (response.data.error) {
-      return res.status(200).json({
-        data: {
-          error: true,
-          message: "Incorrect password",
-        },
-      });
+      return res.status(response.status).json(response.data);
     }
 
     const hash_password = await bcryptjs.hash(new_password, 10);

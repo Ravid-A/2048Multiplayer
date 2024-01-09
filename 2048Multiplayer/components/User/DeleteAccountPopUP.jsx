@@ -29,6 +29,9 @@ export default function DeleteAccountPopUP({ setPopup }) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        validateStatus: (status) => {
+          return status < 500;
+        },
       });
 
       const data = await respone.data;
@@ -40,7 +43,7 @@ export default function DeleteAccountPopUP({ setPopup }) {
       localStorage.removeItem("token");
       router.push("/");
     } catch (err) {
-      setMsg(`Internal Server Error: ${err.message}`);
+      setMsg(`Internal Server Error: ${err.response.data.message}`);
     } finally {
       setLoading(false);
     }

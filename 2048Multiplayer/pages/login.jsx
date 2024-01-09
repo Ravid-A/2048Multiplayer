@@ -54,22 +54,26 @@ export default function Login() {
         password: user.password,
       };
 
-      const response = await axios.post(url, data);
+      const response = await axios.post(url, data, {
+        validateStatus: (status) => {
+          return status < 500;
+        },
+      });
 
       const login = await response.data;
 
-      if (response.status === 200) {
-        if (login.error) {
-          setUser({ ...user, msg: login.message });
-          return;
-        }
-
-        localStorage.setItem("token", login.token);
-        router.push("/");
+      if (login.error) {
+        setUser({ ...user, msg: login.message });
+        return;
       }
+
+      localStorage.setItem("token", login.token);
+      router.push("/");
     } catch (error) {
-      console.error("Error during login:", error);
-      setUser({ ...user, msg: `Internal Server Error: ${error.message}` });
+      setUser({
+        ...user,
+        msg: `Internal Server Error: ${error.response.data.message}`,
+      });
     } finally {
       setLoading(false);
     }

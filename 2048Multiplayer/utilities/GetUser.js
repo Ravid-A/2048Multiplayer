@@ -30,13 +30,16 @@ const getUser = async (token) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      validateStatus: (status) => {
+        return status < 500;
+      },
     });
 
     const data = await response.data;
     return data;
   } catch (error) {
     return {
-      message: error.message,
+      message: error.response.data.message,
       error: true,
     };
   }

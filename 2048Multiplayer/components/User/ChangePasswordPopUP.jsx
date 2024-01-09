@@ -89,17 +89,23 @@ export default function ChangePasswordPopUP({ setPopup }) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        validateStatus: (status) => {
+          return status < 500;
+        },
       });
 
       const update = await response.data;
-      if (update.data.error) {
-        setUser({ ...user, msg: update.data.message });
+      if (update.error) {
+        setUser({ ...user, msg: update.message });
         return;
       }
 
       router.reload();
     } catch (error) {
-      setUser({ ...user, msg: `Internal Server Error: ${error.message}` });
+      setUser({
+        ...user,
+        msg: `Internal Server Error: ${error.response.data.message}`,
+      });
     } finally {
       setLoading(false);
     }

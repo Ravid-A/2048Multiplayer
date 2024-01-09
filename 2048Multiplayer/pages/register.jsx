@@ -85,7 +85,11 @@ export default function Register() {
         password: user.password,
       };
 
-      const response = await axios.post(url, JSON.stringify(data));
+      const response = await axios.post(url, JSON.stringify(data), {
+        validateStatus: (status) => {
+          return status < 500;
+        },
+      });
 
       const register = await response.data;
 
@@ -99,8 +103,10 @@ export default function Register() {
         router.push("/");
       }
     } catch (error) {
-      console.error("An unexpected error happened:", error);
-      setUser({ ...user, msg: `Internal Server Error: ${error.message}` });
+      setUser({
+        ...user,
+        msg: `Internal Server Error: ${error.response.data.message}`,
+      });
     } finally {
       setLoading(false);
     }

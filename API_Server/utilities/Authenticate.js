@@ -5,10 +5,11 @@ import GenerateToken from "./GenerateToken.js";
 const Authenticate = async (user, password) => {
   if (user == null) {
     return {
-      status: 200,
+      status: 400,
       data: {
         error: true,
         message: "Account not found",
+        type: "account_not_found",
       },
     };
   }
@@ -26,7 +27,7 @@ const Authenticate = async (user, password) => {
       };
     } else {
       return {
-        status: 200,
+        status: 400,
         data: {
           error: true,
           message: "Incorrect password",
@@ -37,8 +38,8 @@ const Authenticate = async (user, password) => {
     return {
       status: 500,
       data: {
-        message: "Internal server error: Cannot compare password",
-        error: error.message,
+        message: error.message,
+        error: true,
       },
     };
   }

@@ -50,6 +50,9 @@ export default function ProfilePage() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        validateStatus: (status) => {
+          return status < 500;
+        },
       });
 
       const update = await response.data;
@@ -60,8 +63,10 @@ export default function ProfilePage() {
 
       router.reload();
     } catch (error) {
-      console.error("Error during update:", error);
-      setUser({ ...user, msg: `Internal Server Error: ${error.message}` });
+      setUser({
+        ...user,
+        msg: `Internal Server Error: ${error.response.data.message}`,
+      });
     } finally {
       setLoading(false);
     }

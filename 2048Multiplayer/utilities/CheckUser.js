@@ -32,6 +32,9 @@ const verifyUser = async (token) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        validateStatus: (status) => {
+          return status < 500;
+        },
       }
     );
 
