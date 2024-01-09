@@ -13,7 +13,7 @@ export default function MenuUser({ user }) {
   };
 
   const handleClick = () => {
-    router.push("/profile");
+    router.push("/settings");
   };
 
   return (

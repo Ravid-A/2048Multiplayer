@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import styles from "../../styles/User/Profile.module.css";
+import styles from "../../styles/User/Settings.module.css";
 
 import DeleteAccountPopUP from "./DeleteAccountPopUP";
 import ChangePasswordPopUP from "./ChangePasswordPopUP";
 
-const Profile = ({ handleSubmit, user, setUser, loading }) => {
+const Settings = ({ handleSubmit, user, setUser, loading }) => {
   const router = useRouter();
 
   const [popup, setPopup] = useState("none");
@@ -39,8 +39,8 @@ const Profile = ({ handleSubmit, user, setUser, loading }) => {
   };
 
   return (
-    <div className={styles.profile}>
-      <div className={styles.profile_container}>
+    <div className={styles.settings}>
+      <div className={styles.settings_container}>
         <div
           className={styles.backButton}
           disabled={loading || popup != "none"}
@@ -53,9 +53,9 @@ const Profile = ({ handleSubmit, user, setUser, loading }) => {
           <div className={styles.SubTitle}>Multiplayer</div>
         </div>
 
-        <h2 className={styles.page_title}>Profile</h2>
-        <div className={styles.profile_form}>
-          <div className={styles.profile_form}>
+        <h2 className={styles.page_title}>Settings</h2>
+        <div className={styles.settings_form}>
+          <div className={styles.settings_form}>
             <label htmlFor="username">Username</label>
             <input
               id="username"
@@ -120,4 +120,4 @@ const Profile = ({ handleSubmit, user, setUser, loading }) => {
   );
 };
 
-export default Profile;
+export default Settings;

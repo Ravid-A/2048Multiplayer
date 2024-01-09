@@ -1,6 +1,5 @@
 import express from "express";
 import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
 
 import Account from "../models/account.js";
 

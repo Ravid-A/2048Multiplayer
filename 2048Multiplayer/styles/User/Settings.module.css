@@ -1,13 +1,13 @@
 /* styles/Profile.module.css */
 
-.profile {
+.settings {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
 }
 
-.profile_container {
+.settings_container {
   background-color: #f4f4f4;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -53,11 +53,11 @@
   padding: 5px;
 }
 
-.profile_form {
+.settings_form {
   margin-top: 20px;
 }
 
-.profile_form input {
+.settings_form input {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;

@@ -8,9 +8,9 @@ axios.defaults.headers.common["Content-Type"] = "application/json";
 import GetUser from "../utilities/GetUser";
 import GetAPIUrl from "../utilities/GetAPIUrl";
 
-import Profile from "../components/User/Profile";
+import Settings from "../components/User/Settings";
 
-export default function ProfilePage() {
+export default function SettingsPage() {
   const router = useRouter();
 
   const [user, setUser] = useState(null);
@@ -88,7 +88,7 @@ export default function ProfilePage() {
   return (
     <>
       {user && (
-        <Profile
+        <Settings
           handleSubmit={handleSubmit}
           user={user}
           setUser={setUser}
