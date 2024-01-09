@@ -1,3 +1,7 @@
+import axios from "axios";
+
+axios.defaults.headers.common["Content-Type"] = "application/json";
+
 import GetAPIUrl from "./GetAPIUrl";
 
 const CheckUser = async () => {
@@ -21,15 +25,17 @@ const CheckUser = async () => {
 
 const verifyUser = async (token) => {
   try {
-    const response = await fetch(`${GetAPIUrl()}/users/verify`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.post(
+      `${GetAPIUrl()}/users/verify`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    const data = await response.json();
+    const data = await response.data;
     return !data.error;
   } catch (error) {
     return false;

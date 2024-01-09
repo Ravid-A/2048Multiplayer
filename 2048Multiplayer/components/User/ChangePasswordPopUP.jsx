@@ -1,6 +1,10 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import axios from "axios";
+
+axios.defaults.headers.common["Content-Type"] = "application/json";
+
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -80,16 +84,14 @@ export default function ChangePasswordPopUP({ setPopup }) {
         old_password: user.oldPassword,
         new_password: user.newPassword,
       };
-      const response = await fetch(url, {
-        method: "POST",
+
+      const response = await axios.post(url, data, {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
       });
 
-      const update = await response.json();
+      const update = await response.data;
       if (update.data.error) {
         setUser({ ...user, msg: update.data.message });
         return;
@@ -97,7 +99,7 @@ export default function ChangePasswordPopUP({ setPopup }) {
 
       router.reload();
     } catch (error) {
-      console.error("Error during update:", error);
+      setUser({ ...user, msg: `Internal Server Error: ${error.message}` });
     } finally {
       setLoading(false);
     }

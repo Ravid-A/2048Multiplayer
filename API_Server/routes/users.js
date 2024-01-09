@@ -48,7 +48,6 @@ router.post("/register", async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log(error);
       res.status(500).json({
         message: "Internal server error: Cannot create account",
         error: error.message,
@@ -138,11 +137,10 @@ router.post("/update", protect, async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    return res.status(200).json({
+    return res.status(500).json({
       data: {
         error: true,
-        message: "Internal Server Error",
+        message: error.message,
       },
     });
   }
@@ -183,11 +181,10 @@ router.post("/updatepassword", protect, async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    return res.status(200).json({
+    return res.status(500).json({
       data: {
         error: true,
-        message: "Internal Server Error",
+        message: error.message,
       },
     });
   }
@@ -209,10 +206,10 @@ router.delete("/delete", protect, async (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(200).json({
+    return res.status(500).json({
       data: {
         error: true,
-        message: "Internal Server Error",
+        message: error.message,
       },
     });
   }

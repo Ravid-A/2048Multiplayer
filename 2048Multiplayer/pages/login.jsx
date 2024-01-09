@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
+import axios from "axios";
+
+axios.defaults.headers.common["Content-Type"] = "application/json";
+
 import LoginForm from "../components/LoginForm";
 import CheckUser from "../utilities/CheckUser";
 import GetAPIUrl from "../utilities/GetAPIUrl";
@@ -50,13 +54,9 @@ export default function Login() {
         password: user.password,
       };
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const response = await axios.post(url, data);
 
-      const login = await response.json();
+      const login = await response.data;
 
       if (response.status === 200) {
         if (login.error) {
@@ -69,6 +69,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error("Error during login:", error);
+      setUser({ ...user, msg: `Internal Server Error: ${error.message}` });
     } finally {
       setLoading(false);
     }

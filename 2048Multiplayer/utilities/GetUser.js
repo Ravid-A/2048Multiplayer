@@ -1,3 +1,7 @@
+import axios from "axios";
+
+axios.defaults.headers.common["Content-Type"] = "application/json";
+
 import GetAPIUrl from "./GetAPIUrl.js";
 
 const GetUser = async () => {
@@ -22,15 +26,13 @@ const GetUser = async () => {
 
 const getUser = async (token) => {
   try {
-    const response = await fetch(`${GetAPIUrl()}/users/getdata`, {
-      method: "GET",
+    const response = await axios.get(`${GetAPIUrl()}/users/getdata`, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const data = await response.json();
+    const data = await response.data;
     return data;
   } catch (error) {
     return {

@@ -25,7 +25,6 @@ const protect = asynchandler(async (req, res, next) => {
       req.user_data = user;
       next();
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         message: "Internal Server Error: Invalid Token",
         error: error.message,

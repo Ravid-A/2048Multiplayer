@@ -1,6 +1,10 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
+import axios from "axios";
+
+axios.defaults.headers.common["Content-Type"] = "application/json";
+
 import GetUser from "../utilities/GetUser";
 import GetAPIUrl from "../utilities/GetAPIUrl";
 
@@ -42,16 +46,13 @@ export default function ProfilePage() {
         email: user.email,
       };
 
-      const response = await fetch(url, {
-        method: "POST",
+      const response = await axios.post(url, JSON.stringify(data), {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
       });
 
-      const update = await response.json();
+      const update = await response.data;
       if (update.data.error) {
         setUser({ ...user, msg: update.data.message });
         return;
@@ -60,6 +61,7 @@ export default function ProfilePage() {
       router.reload();
     } catch (error) {
       console.error("Error during update:", error);
+      setUser({ ...user, msg: `Internal Server Error: ${error.message}` });
     } finally {
       setLoading(false);
     }
