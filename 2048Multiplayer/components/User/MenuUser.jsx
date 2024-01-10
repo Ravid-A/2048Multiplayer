@@ -5,14 +5,18 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "../../styles/User/MenuUser.module.css";
 
-export default function MenuUser({ user }) {
+export default function MenuUser({ user, popUp }) {
   const router = useRouter();
 
   const handleLogin = () => {
+    if (popUp) return;
+
     router.push("/login");
   };
 
   const handleClick = () => {
+    if (popUp) return;
+
     router.push("/settings");
   };
 

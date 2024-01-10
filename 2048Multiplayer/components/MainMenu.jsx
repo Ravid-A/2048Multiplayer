@@ -6,11 +6,13 @@ import styles from "../styles/MainMenu.module.css";
 import GetUser from "../utilities/GetUser";
 
 import MenuUser from "./User/MenuUser";
+import NoConnectedPopUP from "./NotConnectedPopUP";
 
 export default function MainMenu() {
   const router = useRouter();
 
   const [user, setUser] = useState(null);
+  const [popUp, setPopUp] = useState(false);
 
   const getUser = async () => {
     const user = await GetUser();
@@ -22,16 +24,26 @@ export default function MainMenu() {
   }, []);
 
   const onClick = (event) => {
-    alert("Coming soon! " + event.target.value + " mode");
+    const page = event.target.value;
+
+    alert("Coming soon! " + page + " mode");
     return;
 
-    router.push("/" + event.target.value);
+    switch (page) {
+      case "classic":
+        router.push("/classic");
+        break;
+      default:
+        if (user) router.push("/" + page);
+        else setPopUp(true);
+        break;
+    }
   };
 
   return (
     <>
       <div className={styles.MainMenu}>
-        <MenuUser user={user} />
+        <MenuUser user={user} popUp={popUp} />
         <div className={styles.Titles}>
           <div className={styles.Title}>2048</div>
           <div className={styles.SubTitle}>Multiplayer</div>
@@ -42,6 +54,7 @@ export default function MainMenu() {
             className={styles.MenuButton}
             onClick={onClick}
             value="classic"
+            disabled={popUp}
           >
             Classic 2048
           </button>
@@ -49,6 +62,7 @@ export default function MainMenu() {
             className={styles.MenuButton}
             onClick={onClick}
             value="multiplayer"
+            disabled={popUp}
           >
             Multiplayer
           </button>
@@ -56,6 +70,7 @@ export default function MainMenu() {
             className={styles.MenuButton}
             onClick={onClick}
             value="speedrun"
+            disabled={popUp}
           >
             Speedrun
           </button>
@@ -63,10 +78,12 @@ export default function MainMenu() {
             className={styles.MenuButton}
             onClick={onClick}
             value="private"
+            disabled={popUp}
           >
             Private Lobby
           </button>
         </div>
+        {popUp && <NoConnectedPopUP setPopUp={setPopUp} />}
       </div>
     </>
   );
