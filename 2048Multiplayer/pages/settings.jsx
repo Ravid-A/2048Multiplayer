@@ -46,7 +46,11 @@ export default function SettingsPage() {
         email: user.email,
       };
 
-      const response = await axios.post(url, JSON.stringify(data), {
+      if (!token) {
+        router.push("/");
+      }
+
+      const response = await axios.patch(url, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,8 +60,8 @@ export default function SettingsPage() {
       });
 
       const update = await response.data;
-      if (update.data.error) {
-        setUser({ ...user, msg: update.data.message });
+      if (update.error) {
+        setUser({ ...user, msg: update.message });
         return;
       }
 
@@ -66,7 +70,7 @@ export default function SettingsPage() {
     } catch (error) {
       setUser({
         ...user,
-        msg: `Internal Server Error: ${error.response.data.message}`,
+        msg: `Internal Server Error: ${error.response.message}`,
       });
     } finally {
       setLoading(false);

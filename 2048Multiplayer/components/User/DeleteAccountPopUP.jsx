@@ -25,6 +25,10 @@ export default function DeleteAccountPopUP({ setPopup }) {
     try {
       setLoading(true);
 
+      if (!token) {
+        router.push("/");
+      }
+
       const respone = await axios.delete(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -35,15 +39,15 @@ export default function DeleteAccountPopUP({ setPopup }) {
       });
 
       const data = await respone.data;
-      if (data.data.error) {
-        setMsg(data.data.message);
+      if (data.error) {
+        setMsg(data.message);
         return;
       }
 
       localStorage.removeItem("token");
       router.push("/");
     } catch (err) {
-      setMsg(`Internal Server Error: ${err.response.data.message}`);
+      setMsg(`Internal Server Error: ${err.response.message}`);
     } finally {
       setLoading(false);
     }

@@ -93,15 +93,13 @@ export default function Register() {
 
       const register = await response.data;
 
-      if (response.status === 200) {
-        if (register.error) {
-          setUser({ ...user, msg: register.message });
-          return;
-        }
-
-        localStorage.setItem("token", register.token);
-        router.push("/");
+      if (register.error) {
+        setUser({ ...user, msg: register.message });
+        return;
       }
+
+      localStorage.setItem("token", register.token);
+      router.push("/");
     } catch (error) {
       setUser({
         ...user,

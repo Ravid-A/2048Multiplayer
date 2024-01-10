@@ -25,18 +25,14 @@ const CheckUser = async () => {
 
 const verifyUser = async (token) => {
   try {
-    const response = await axios.post(
-      `${GetAPIUrl()}/users/verify`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        validateStatus: (status) => {
-          return status < 500;
-        },
-      }
-    );
+    const response = await axios.get(`${GetAPIUrl()}/users/verify`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      validateStatus: (status) => {
+        return status < 500;
+      },
+    });
 
     const data = await response.data;
     return !data.error;
