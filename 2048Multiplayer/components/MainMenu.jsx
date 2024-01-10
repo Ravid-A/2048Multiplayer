@@ -22,6 +22,9 @@ export default function MainMenu() {
   }, []);
 
   const onClick = (event) => {
+    alert("Coming soon! " + event.target.value + " mode");
+    return;
+
     router.push("/" + event.target.value);
   };
 
