@@ -103,7 +103,7 @@ export default function Register() {
     } catch (error) {
       setUser({
         ...user,
-        msg: `Internal Server Error: ${error.response.data.message}`,
+        msg: `Internal Server Error: ${error.response.message}`,
       });
     } finally {
       setLoading(false);
