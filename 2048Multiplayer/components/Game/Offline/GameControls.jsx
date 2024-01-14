@@ -1,3 +1,5 @@
+import styles from "../../../styles/Game/Offline/GameControls.module.css";
+
 export default function GameControls({ game, setGame }) {
   return (
     <div>

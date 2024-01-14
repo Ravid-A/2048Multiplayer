@@ -1,3 +1,5 @@
+import styles from "../../../styles/Game/Offline/GameHeading.module.css";
+
 export default function GameHeading() {
   return (
     <div>

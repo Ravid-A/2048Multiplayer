@@ -2,9 +2,7 @@ import { useState } from "react";
 
 import CGame from "../utilities/CGame";
 
-import GameHeading from "../components/Game/GameHeading";
-import GameControls from "../components/Game/GameControls";
-import GamePanel from "../components/Game/GamePanel";
+import OfflineGame from "../components/Game/OfflineGame";
 
 //import "../styles/Classic.module.css";
 
@@ -13,9 +11,7 @@ export default function Classic() {
 
   return (
     <>
-      <GameHeading />
-      <GameControls />
-      <GamePanel />
+      <OfflineGame />
     </>
   );
 }
