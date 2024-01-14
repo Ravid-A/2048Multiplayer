@@ -42,8 +42,13 @@ const VerifyController = async (req, res) => {
 };
 
 const GetDataController = async (req, res) => {
+  const user_data = req.user_data;
   return res.status(200).json({
-    user_data: req.user_data,
+    user_data: {
+      id: user_data.id,
+      username: user_data.username,
+      email: user_data.email,
+    },
     error: false,
   });
 };
