@@ -16,3 +16,25 @@
 .UserName {
   font-size: 18px;
 }
+
+@media screen and (max-width: 1000px) {
+  .UserName {
+    font-size: 24px;
+  }
+
+  .UserIcon {
+    font-size: 30px;
+    margin-right: 7px;
+  }
+}
+
+@media screen and (min-height: 800px) {
+  .UserName {
+    font-size: 40px;
+  }
+
+  .UserIcon {
+    font-size: 46px;
+    margin-right: 20px;
+  }
+}

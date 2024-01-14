@@ -39,7 +39,7 @@ const getUser = async (token) => {
     return data;
   } catch (error) {
     return {
-      message: error.response.message,
+      message: error.response.data.message,
       error: true,
     };
   }

@@ -72,6 +72,8 @@ const Settings = ({ handleSubmit, user, setUser, loading }) => {
               disabled={loading || popup !== "none"}
               placeholder={user.placeholder.email}
             />
+            {user.msg && <div className={styles.error}>{user.msg}</div>}
+            <br />
             <button
               className={styles.update_button}
               onClick={handleUpdate}
@@ -79,7 +81,6 @@ const Settings = ({ handleSubmit, user, setUser, loading }) => {
             >
               {loading ? "Updating..." : "Update"}
             </button>
-            {user.msg && <div className={styles.error}>{user.msg}</div>}
           </div>
           <br />
           <br />

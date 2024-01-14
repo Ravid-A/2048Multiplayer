@@ -27,7 +27,6 @@
 
 .Titles {
   font-weight: bold;
-  font-family: fantasy;
   height: fit-content;
   text-align: center;
   margin-top: 5%;
@@ -39,7 +38,7 @@
 }
 
 .SubTitle {
-  font-size: 30px;
+  font-size: 28px;
   color: #773e65;
   width: fit-content;
   border: 2px solid lightcoral;
@@ -105,4 +104,65 @@
 .showPasswordButton svg {
   font-size: 18px;
   color: #555;
+}
+
+@media screen and (max-width: 1024px) {
+  .register_form input {
+    font-size: 20px;
+  }
+
+  .backButton {
+    font-size: 45px;
+  }
+
+  .SubTitle {
+    font-size: 28px;
+  }
+
+  .showPasswordButton svg {
+    font-size: 25px;
+  }
+
+  .Link {
+    font-size: 20px;
+  }
+
+  .register_button {
+    font-size: 25px;
+  }
+}
+
+@media screen and (min-height: 800px) {
+  .backButton {
+    font-size: 50px;
+  }
+
+  .register_container {
+    width: 500px;
+  }
+
+  .register_form input {
+    font-size: 28px;
+  }
+
+  .Title {
+    font-size: 90px;
+  }
+
+  .SubTitle {
+    font-size: 40px;
+    transform: translate(120%, -40%);
+  }
+
+  .showPasswordButton svg {
+    font-size: 30px;
+  }
+
+  .Link {
+    font-size: 30px;
+  }
+
+  .register_button {
+    font-size: 40px;
+  }
 }

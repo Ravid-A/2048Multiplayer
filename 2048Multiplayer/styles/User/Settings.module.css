@@ -8,6 +8,7 @@
 }
 
 .settings_container {
+  width: fit-content;
   background-color: #f4f4f4;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -32,7 +33,7 @@
 
 .Titles {
   font-weight: bold;
-  font-family: fantasy;
+  font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   margin-top: 5%;
 }
@@ -43,13 +44,13 @@
 }
 
 .SubTitle {
-  font-size: 30px;
+  font-size: 28px;
   color: #773e65;
   width: fit-content;
   border: 2px solid lightcoral;
   border-radius: 6px;
   background: lightcoral;
-  transform: translate(100%, -50%);
+  transform: translate(90%, -50%);
   padding: 5px;
 }
 
@@ -127,4 +128,102 @@
   font-size: 15px;
   margin-top: 15px;
   text-align: center;
+}
+
+@media screen and (max-width: 1024px) {
+  .settings {
+    height: 80vh;
+    margin-top: 35px;
+  }
+
+  .settings_container {
+    padding: 20px;
+  }
+
+  .page_title {
+    font-size: 28px;
+  }
+
+  .settings_form label {
+    font-size: 20px;
+  }
+
+  .settings_form input {
+    font-size: 18px;
+  }
+
+  .update_button {
+    font-size: 20px;
+  }
+
+  .delete_button {
+    font-size: 20px;
+  }
+
+  .change_password_button {
+    font-size: 20px;
+  }
+
+  .logout_button {
+    font-size: 20px;
+  }
+
+  .backButton {
+    font-size: 35px;
+    top: 10px;
+  }
+
+  .error {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-height: 800px) {
+  .settings {
+    margin-top: 50px;
+  }
+}
+
+@media screen and (min-height: 800px) {
+  .settings_container {
+    padding: 50px;
+  }
+
+  .update_button {
+    font-size: 24px;
+  }
+
+  .delete_button {
+    font-size: 24px;
+  }
+
+  .change_password_button {
+    font-size: 24px;
+  }
+
+  .logout_button {
+    font-size: 24px;
+  }
+
+  .page_title {
+    font-size: 38px;
+  }
+
+  .settings_form label {
+    font-size: 24px;
+  }
+
+  .settings_form input {
+    font-size: 20px;
+  }
+
+  .backButton {
+    font-size: 45px;
+    top: 20px;
+    left: 30px;
+  }
+
+  .error {
+    font-size: 20px;
+  }
 }

@@ -47,7 +47,7 @@ export default function DeleteAccountPopUP({ setPopup }) {
       localStorage.removeItem("token");
       router.push("/");
     } catch (err) {
-      setMsg(`Internal Server Error: ${err.response.message}`);
+      setMsg(`Internal Server Error: ${err.response.data.message}`);
     } finally {
       setLoading(false);
     }

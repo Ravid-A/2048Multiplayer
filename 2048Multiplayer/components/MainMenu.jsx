@@ -26,8 +26,8 @@ export default function MainMenu() {
   const onClick = (event) => {
     const page = event.target.value;
 
-    alert("Coming soon! " + page + " mode");
-    return;
+    // alert("Coming soon! " + page + " mode");
+    // return;
 
     switch (page) {
       case "classic":

@@ -13,7 +13,7 @@
 
 .Titles {
   font-weight: bold;
-  font-family: fantasy;
+  font-family: Arial, Helvetica, sans-serif;
   height: fit-content;
   text-align: center;
   margin-top: 5%;
@@ -31,7 +31,7 @@
   border: 2px solid lightcoral;
   border-radius: 6px;
   background: lightcoral;
-  transform: translate(20vw, -40%);
+  transform: translate(19.5vw, -40%);
 }
 
 .Menu {
@@ -43,9 +43,10 @@
 }
 
 .MenuButton {
-  font-size: 1.2em;
+  font-size: 20px;
   width: 80%;
   max-width: 300px;
+  font-weight: bold;
   color: white;
   height: 3em;
   border: 2px solid #4caf50;
@@ -61,23 +62,45 @@
 }
 
 /* Responsive styles for smaller screens */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1024px) {
   .MainMenu {
     width: 90%;
+    height: 85vh;
   }
 
   .Title {
-    font-size: 2em;
+    font-size: 72px;
   }
 
   .SubTitle {
-    font-size: 1em;
-    transform: translate(5px, -50%);
+    font-size: 30px;
+    transform: translate(42.5vw, -40%);
   }
 
   .MenuButton {
-    font-size: 1em;
-    height: 2.5em;
-    margin-bottom: 8px;
+    font-size: 30px;
+    margin-top: 10px;
+  }
+}
+
+@media screen and (min-height: 800px) {
+  .MainMenu {
+    width: 50vw;
+    height: 80vh;
+    max-width: 1000px;
+  }
+
+  .Title {
+    font-size: 72px;
+  }
+
+  .SubTitle {
+    font-size: 40px;
+    transform: translate(25vw, -25%);
+  }
+
+  .MenuButton {
+    font-size: 30px;
+    margin-top: 10px;
   }
 }

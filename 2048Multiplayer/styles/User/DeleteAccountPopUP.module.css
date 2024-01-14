@@ -54,3 +54,48 @@
   margin-top: 15px;
   text-align: center;
 }
+
+@media screen and (max-width: 1024px) {
+  .PopUp {
+    padding: 20px;
+    width: 80%;
+  }
+
+  .PopUp h1 {
+    font-size: 30px;
+  }
+
+  .PopUp p {
+    font-size: 24px;
+  }
+
+  .PopUp button {
+    font-size: 24px;
+  }
+
+  .msg {
+    font-size: 22px;
+  }
+}
+
+@media screen and (min-height: 800px) {
+  .PopUp {
+    padding: 40px;
+  }
+
+  .PopUp h1 {
+    font-size: 38px;
+  }
+
+  .PopUp p {
+    font-size: 24px;
+  }
+
+  .PopUp button {
+    font-size: 32px;
+  }
+
+  .msg {
+    font-size: 24px;
+  }
+}

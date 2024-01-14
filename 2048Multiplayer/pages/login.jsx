@@ -73,7 +73,7 @@ export default function LoginPage() {
     } catch (error) {
       setUser({
         ...user,
-        msg: `Internal Server Error: ${error.response.message}`,
+        msg: `Internal Server Error: ${error.response.data.message}`,
       });
     } finally {
       setLoading(false);
