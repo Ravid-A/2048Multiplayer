@@ -10,7 +10,7 @@ import GetAPIUrl from "../utilities/GetAPIUrl";
 
 import RegisterForm from "../components/RegisterForm";
 
-export default function Register() {
+export default function RegisterPage() {
   const router = useRouter();
 
   const [user, setUser] = useState({

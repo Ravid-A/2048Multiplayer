@@ -6,10 +6,11 @@ import axios from "axios";
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
 import LoginForm from "../components/LoginForm";
+
 import CheckUser from "../utilities/CheckUser";
 import GetAPIUrl from "../utilities/GetAPIUrl";
 
-export default function Login() {
+export default function LoginPage() {
   const router = useRouter();
 
   const [user, setUser] = useState({ identifier: "", password: "", msg: "" });

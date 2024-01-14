@@ -1,6 +1,6 @@
 import MainMenu from "../components/MainMenu";
 
-export default function App() {
+export default function MainPage() {
   return (
     <>
       <MainMenu />
