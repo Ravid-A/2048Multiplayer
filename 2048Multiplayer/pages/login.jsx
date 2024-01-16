@@ -71,6 +71,14 @@ export default function LoginPage() {
       localStorage.setItem("token", login.token);
       router.push("/");
     } catch (error) {
+      if (!error.response) {
+        setUser({
+          ...user,
+          msg: `Internal Server Error: ${error.message}`,
+        });
+        return;
+      }
+
       setUser({
         ...user,
         msg: `Internal Server Error: ${error.response.data.message}`,

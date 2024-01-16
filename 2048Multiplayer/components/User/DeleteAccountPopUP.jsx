@@ -47,6 +47,11 @@ export default function DeleteAccountPopUP({ setPopup }) {
       localStorage.removeItem("token");
       router.push("/");
     } catch (err) {
+      if (!err.response) {
+        setMsg(`Internal Server Error: ${err.message}`);
+        return;
+      }
+
       setMsg(`Internal Server Error: ${err.response.data.message}`);
     } finally {
       setLoading(false);
@@ -62,7 +67,7 @@ export default function DeleteAccountPopUP({ setPopup }) {
         onClick={handleSure}
         disabled={loading}
       >
-        I'm Sure
+        {loading ? "Deleting..." : "Sure"}
       </button>
       <button
         className={styles.CancelButton}

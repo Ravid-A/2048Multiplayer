@@ -68,6 +68,14 @@ export default function SettingsPage() {
       getUser();
       setUser(null);
     } catch (error) {
+      if (!error.response) {
+        setUser({
+          ...user,
+          msg: `Internal Server Error: ${error.message}`,
+        });
+        return;
+      }
+
       setUser({
         ...user,
         msg: `Internal Server Error: ${error.response.data.message}`,

@@ -106,7 +106,7 @@ export default function RegisterForm({
             onClick={handleSubmit}
             disabled={loggedIn || loading}
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
           {user.msg && <div className={styles.error}>{user.msg}</div>}
         </div>
