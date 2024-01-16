@@ -130,6 +130,10 @@
   .register_button {
     font-size: 25px;
   }
+
+  .error {
+    font-size: 20px;
+  }
 }
 
 @media screen and (min-height: 800px) {
@@ -164,5 +168,9 @@
 
   .register_button {
     font-size: 40px;
+  }
+
+  .error {
+    font-size: 20px;
   }
 }
