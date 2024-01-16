@@ -1,18 +1,13 @@
-import { useEffect } from "react";
+import Head from "next/head";
 
 import "../styles/global.css";
 
 export default function App({ Component, pageProps }) {
-  useEffect(() => {
-    document.title = "2048 Multiplayer";
-
-    return () => {
-      document.title = "2048 Multiplayer";
-    };
-  }, []);
-
   return (
     <>
+      <Head>
+        <title>2048 Multiplayer</title>
+      </Head>
       <Component {...pageProps} />
     </>
   );
