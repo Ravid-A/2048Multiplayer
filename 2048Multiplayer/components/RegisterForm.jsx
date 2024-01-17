@@ -74,13 +74,12 @@ export default function RegisterForm({
             value={user.password}
             disabled={loggedIn || loading}
           />
-          <button
-            type="button"
+          <div
             className={styles.showPasswordButton}
             onClick={handleShowPassword}
           >
             <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
-          </button>
+          </div>
           <input
             id="confirm_password"
             type={showConfirmPassword ? "text" : "password"}
@@ -89,13 +88,12 @@ export default function RegisterForm({
             value={user.confirm_password}
             disabled={loggedIn || loading}
           />
-          <button
-            type="button"
+          <div
             className={styles.showPasswordButton}
             onClick={handleShowConfirmPassword}
           >
             <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />
-          </button>
+          </div>
           <Link className={styles.Link} href="/login">
             Have an account? Login here
           </Link>

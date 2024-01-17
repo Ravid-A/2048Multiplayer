@@ -9,13 +9,13 @@ export default function MenuUser({ user, popUp }) {
   const router = useRouter();
 
   const handleLogin = () => {
-    if (popUp) return;
+    if (popUp != "none") return;
 
     router.push("/login");
   };
 
   const handleClick = () => {
-    if (popUp) return;
+    if (popUp != "none") return;
 
     router.push("/settings");
   };

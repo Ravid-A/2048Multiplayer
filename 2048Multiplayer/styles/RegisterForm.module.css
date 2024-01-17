@@ -92,6 +92,7 @@
 }
 
 .showPasswordButton {
+  display: inline;
   position: absolute;
   background-color: transparent;
   border: none;

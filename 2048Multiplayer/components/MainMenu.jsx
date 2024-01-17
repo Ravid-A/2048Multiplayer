@@ -12,11 +12,13 @@ export default function MainMenu() {
   const router = useRouter();
 
   const [user, setUser] = useState(null);
-  const [popUp, setPopUp] = useState(false);
+  const [popUp, setPopUp] = useState("none");
 
   const getUser = async () => {
+    setPopUp("getting_user");
     const user = await GetUser();
     setUser(user);
+    setPopUp("none");
   };
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function MainMenu() {
         break;
       default:
         if (user) router.push("/" + page);
-        else setPopUp(true);
+        else setPopUp("not_connected");
         break;
     }
   };
@@ -54,7 +56,7 @@ export default function MainMenu() {
             className={styles.MenuButton}
             onClick={onClick}
             value="classic"
-            disabled={popUp}
+            disabled={popUp != "none"}
           >
             Classic 2048
           </button>
@@ -62,7 +64,7 @@ export default function MainMenu() {
             className={styles.MenuButton}
             onClick={onClick}
             value="multiplayer"
-            disabled={popUp}
+            disabled={popUp != "none"}
           >
             Multiplayer
           </button>
@@ -70,7 +72,7 @@ export default function MainMenu() {
             className={styles.MenuButton}
             onClick={onClick}
             value="speedrun"
-            disabled={popUp}
+            disabled={popUp != "none"}
           >
             Speedrun
           </button>
@@ -78,12 +80,12 @@ export default function MainMenu() {
             className={styles.MenuButton}
             onClick={onClick}
             value="private"
-            disabled={popUp}
+            disabled={popUp != "none"}
           >
             Private Lobby
           </button>
         </div>
-        {popUp && <NoConnectedPopUP setPopUp={setPopUp} />}
+        {popUp == "not_connected" && <NoConnectedPopUP setPopUp={setPopUp} />}
       </div>
     </>
   );

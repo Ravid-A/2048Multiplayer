@@ -9,7 +9,7 @@ export default function NoConnectedPopUP({ setPopUp }) {
   };
 
   const handleNo = () => {
-    setPopUp(false);
+    setPopUp("none");
   };
 
   return (

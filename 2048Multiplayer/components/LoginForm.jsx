@@ -61,13 +61,12 @@ export default function LoginForm({
             placeholder="Password"
             value={user.password}
           />
-          <button
-            type="button"
+          <div
             className={styles.showPasswordButton}
             onClick={handleShowPassword}
           >
             <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
-          </button>
+          </div>
           <Link className={styles.Link} href="/register">
             Don't have an account? Register here
           </Link>

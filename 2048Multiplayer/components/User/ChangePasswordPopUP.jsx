@@ -129,13 +129,12 @@ export default function ChangePasswordPopUP({ setPopup }) {
           onChange={handleChange}
           disabled={loading}
         />
-        <button
-          type="button"
+        <div
           className={styles.showPasswordButton}
           onClick={handleShowOldPassword}
         >
           <FontAwesomeIcon icon={showOldPassword ? faEye : faEyeSlash} />
-        </button>
+        </div>
       </div>
       <input
         id="newPassword"
@@ -145,13 +144,12 @@ export default function ChangePasswordPopUP({ setPopup }) {
         onChange={handleChange}
         disabled={loading}
       />
-      <button
-        type="button"
+      <div
         className={styles.showPasswordButton}
         onClick={handleShowNewPassword}
       >
         <FontAwesomeIcon icon={showNewPassword ? faEye : faEyeSlash} />
-      </button>
+      </div>
       <input
         id="confirmPassword"
         type={showConfirmPassword ? "text" : "password"}
@@ -160,13 +158,12 @@ export default function ChangePasswordPopUP({ setPopup }) {
         onChange={handleChange}
         disabled={loading}
       />
-      <button
-        type="button"
+      <div
         className={styles.showPasswordButton}
         onClick={handleShowConfirmPassword}
       >
         <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />
-      </button>
+      </div>
 
       <br />
       <br />
