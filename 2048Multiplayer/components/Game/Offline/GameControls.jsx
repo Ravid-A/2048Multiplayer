@@ -1,12 +1,13 @@
+import { observer } from "mobx-react-lite";
+
 import styles from "../../../styles/Game/Offline/GameControls.module.css";
 
-export default function GameControls({ game, setGame }) {
+const GameControls = ({ game }) => {
   return (
-    <div>
-      <p>
-        Join the numbers and get to the <strong>2048 tile!</strong>
-      </p>
-      <button>New Game</button>
+    <div className={styles.game_controls}>
+      <button onClick={game.start}>New Game</button>
     </div>
   );
-}
+};
+
+export default observer(GameControls);

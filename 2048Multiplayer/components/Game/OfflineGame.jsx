@@ -1,15 +1,22 @@
+import { useEffect } from "react";
+import { observer } from "mobx-react-lite";
+
 import GameControls from "./Offline/GameControls";
 import GameHeading from "./Offline/GameHeading";
 import GamePanel from "./Offline/GamePanel";
 
-import styles from "../../styles/Game/OfflineGame.module.css";
+const OfflineGame = ({ game }) => {
+  useEffect(() => {
+    game.setBestScoreFromLocalStorage();
+  }, []);
 
-export default function OfflineGame() {
   return (
     <div>
-      <GameHeading />
-      <GameControls />
-      <GamePanel />
+      <GameHeading game={game} />
+      <GameControls game={game} />
+      <GamePanel game={game} />
     </div>
   );
-}
+};
+
+export default observer(OfflineGame);

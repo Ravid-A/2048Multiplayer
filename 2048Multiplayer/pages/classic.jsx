@@ -1,17 +1,11 @@
-import { useState } from "react";
-
-import CGame from "../utilities/CGame";
-
 import OfflineGame from "../components/Game/OfflineGame";
+
+import GameObserver from "../states/GameObserver";
 
 //import "../styles/Classic.module.css";
 
 export default function Classic() {
-  const [game, setGame] = useState(new CGame());
+  const game = new GameObserver();
 
-  return (
-    <>
-      <OfflineGame />
-    </>
-  );
+  return <OfflineGame game={game} />;
 }

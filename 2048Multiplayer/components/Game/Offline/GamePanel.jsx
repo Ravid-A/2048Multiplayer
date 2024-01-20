@@ -1,49 +1,24 @@
+import { observer } from "mobx-react-lite";
+
 import styles from "../../../styles/Game/Offline/GamePanel.module.css";
 
-export default function GamePanel({ tiles = [], online = false }) {
+const GamePanel = ({ game }) => {
   return (
-    <>
-      <div>
-        <div>
-          <div>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <br />
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <br />
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <br />
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-            <button disabled={true}></button>
-          </div>
-          <div>
-            <p>Game Over!</p>
-          </div>
+    <div className={styles.game_panel}>
+      {game.getBoard.map((row, rowIndex) => (
+        <div key={rowIndex} className={styles.row}>
+          {row.map((cell, cellIndex) => (
+            <div
+              key={cellIndex}
+              className={`${styles.cell} ${styles[`cell_${cell}`]}`}
+            >
+              {cell}
+            </div>
+          ))}
         </div>
-
-        <div>
-          <p>
-            <strong>How to play:</strong> Use your
-            <strong>arrow keys</strong> to move the tiles. When two tiles with
-            the same number touch, they <strong>merge into one!</strong>
-          </p>
-          <div>↑</div>
-          <br />
-          <div>←</div>
-          <div>↓</div>
-          <div>→</div>
-        </div>
-      </div>
-    </>
+      ))}
+    </div>
   );
-}
+};
+
+export default observer(GamePanel);
