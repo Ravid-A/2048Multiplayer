@@ -38,6 +38,13 @@ const getUser = async (token) => {
     const data = await response.data;
     return data;
   } catch (error) {
+    if (!error.response) {
+      return {
+        message: `Internal server error: ${error.message}`,
+        error: true,
+      };
+    }
+
     return {
       message: error.response.data.message,
       error: true,

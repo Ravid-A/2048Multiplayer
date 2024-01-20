@@ -65,7 +65,7 @@ export default function RegisterForm({
           />
           <input
             id="email"
-            type="text"
+            type="email"
             onChange={handleChange}
             placeholder="Email"
             value={user.email}

@@ -17,6 +17,12 @@ export default function MainMenu() {
   const getUser = async () => {
     setPopUp("getting_user");
     const user = await GetUser();
+
+    if (!user) {
+      setPopUp("none");
+      return;
+    }
+
     setUser(user);
     setPopUp("none");
   };
