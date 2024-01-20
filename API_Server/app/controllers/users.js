@@ -9,6 +9,13 @@ import {
 const RegisterController = async (req, res) => {
   const { email, password, username } = req.body;
 
+  if (email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) === null) {
+    return res.status(400).json({
+      message: "Invalid Email Format",
+      error: true,
+    });
+  }
+
   try {
     const response = await Register(email, password, username);
     return res.status(response.status).json(response.data);

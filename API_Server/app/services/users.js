@@ -80,6 +80,16 @@ const Update = async (username, email, user_data) => {
   }
 
   if (email) {
+    if (email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) === null) {
+      return {
+        status: 400,
+        data: {
+          message: "Invalid Email Format",
+          error: true,
+        },
+      };
+    }
+
     data_to_update.email = email;
   }
 
