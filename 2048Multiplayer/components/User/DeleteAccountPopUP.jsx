@@ -5,6 +5,9 @@ import axios from "axios";
 
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import styles from "../../styles/User/DeleteAccountPopUP.module.css";
 import GetAPIUrl from "../../utilities/GetAPIUrl";
 
@@ -23,6 +26,7 @@ export default function DeleteAccountPopUP({ setPopup }) {
     const token = localStorage.getItem("token");
 
     try {
+      setMsg("");
       setLoading(true);
 
       if (!token) {
@@ -67,7 +71,14 @@ export default function DeleteAccountPopUP({ setPopup }) {
         onClick={handleSure}
         disabled={loading}
       >
-        {loading ? "Deleting..." : "Sure"}
+        {loading ? (
+          <>
+            {"Deleting "}
+            <FontAwesomeIcon icon={faSpinner} spinPulse />
+          </>
+        ) : (
+          "Sure"
+        )}
       </button>
       <button
         className={styles.CancelButton}

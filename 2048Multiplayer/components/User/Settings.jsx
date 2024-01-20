@@ -1,6 +1,9 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { faSpinner, faLeftLong } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import styles from "../../styles/User/Settings.module.css";
 
 import DeleteAccountPopUP from "./DeleteAccountPopUP";
@@ -46,7 +49,7 @@ const Settings = ({ handleSubmit, user, setUser, loading }) => {
           disabled={loading || popup != "none"}
           onClick={handleBackButton}
         >
-          ←
+          <FontAwesomeIcon icon={faLeftLong} />
         </div>
         <div className={styles.Titles}>
           <div className={styles.Title}>2048</div>
@@ -79,7 +82,14 @@ const Settings = ({ handleSubmit, user, setUser, loading }) => {
               onClick={handleUpdate}
               disabled={loading || popup !== "none"}
             >
-              {loading ? "Updating..." : "Update"}
+              {loading ? (
+                <>
+                  {"Updating "}
+                  <FontAwesomeIcon icon={faSpinner} spinPulse />
+                </>
+              ) : (
+                "Update"
+              )}
             </button>
           </div>
           <br />

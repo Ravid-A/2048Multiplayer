@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faSpinner,
+  faLeftLong,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import LoggedInPopUP from "./LoggedInPopUP";
@@ -38,7 +43,7 @@ export default function LoginForm({
     <div className={styles.login}>
       <div className={styles.login_container}>
         <div className={styles.backButton} onClick={handleBackButton}>
-          ←
+          <FontAwesomeIcon icon={faLeftLong} />
         </div>
         <div className={styles.Titles}>
           <div className={styles.Title}>2048</div>
@@ -77,7 +82,14 @@ export default function LoginForm({
             onClick={handleSubmit}
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? (
+              <>
+                {"Logging in "}
+                <FontAwesomeIcon icon={faSpinner} spinPulse />
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
           {user.msg && <div className={styles.error}>{user.msg}</div>}
         </div>

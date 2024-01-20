@@ -37,6 +37,7 @@ export default function SettingsPage() {
 
   const handleUpdate = async () => {
     try {
+      setUser({ ...user, msg: "" });
       setLoading(true);
 
       const token = localStorage.getItem("token");

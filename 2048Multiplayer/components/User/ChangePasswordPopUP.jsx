@@ -5,7 +5,11 @@ import axios from "axios";
 
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import styles from "../../styles/User/ChangePasswordPopUP.module.css";
@@ -68,6 +72,7 @@ export default function ChangePasswordPopUP({ setPopup }) {
 
   const handleSubmit = async () => {
     try {
+      setUser({ ...user, msg: "" });
       setLoading(true);
 
       const token = localStorage.getItem("token");
@@ -173,7 +178,14 @@ export default function ChangePasswordPopUP({ setPopup }) {
         onClick={handleUpdate}
         disabled={loading}
       >
-        {loading ? "Changing..." : "Change Password"}
+        {loading ? (
+          <>
+            {"Changing "}
+            <FontAwesomeIcon icon={faSpinner} spinPulse />
+          </>
+        ) : (
+          "Change Password"
+        )}
       </button>
       <button
         className={styles.CancelButton}

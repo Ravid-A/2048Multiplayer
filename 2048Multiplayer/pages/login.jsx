@@ -9,6 +9,7 @@ import LoginForm from "../components/LoginForm";
 
 import CheckUser from "../utilities/CheckUser";
 import GetAPIUrl from "../utilities/GetAPIUrl";
+import { set } from "mobx";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -47,6 +48,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
+      setUser({ ...user, msg: "" });
       setLoading(true);
 
       const url = GetAPIUrl() + "/users/login";

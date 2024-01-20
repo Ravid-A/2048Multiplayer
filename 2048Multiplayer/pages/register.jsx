@@ -75,6 +75,7 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     try {
+      setUser({ ...user, msg: "" });
       setLoading(true);
 
       const url = GetAPIUrl() + "/users/register";
