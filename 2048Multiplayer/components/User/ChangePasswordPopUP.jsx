@@ -125,21 +125,19 @@ export default function ChangePasswordPopUP({ setPopup }) {
     <div className={styles.PopUp}>
       <h1>Change Password</h1>
 
-      <div>
-        <input
-          id="oldPassword"
-          type={showOldPassword ? "text" : "password"}
-          placeholder="Old Password"
-          value={user.oldPassword}
-          onChange={handleChange}
-          disabled={loading}
-        />
-        <div
-          className={styles.showPasswordButton}
-          onClick={handleShowOldPassword}
-        >
-          <FontAwesomeIcon icon={showOldPassword ? faEye : faEyeSlash} />
-        </div>
+      <input
+        id="oldPassword"
+        type={showOldPassword ? "text" : "password"}
+        placeholder="Old Password"
+        value={user.oldPassword}
+        onChange={handleChange}
+        disabled={loading}
+      />
+      <div
+        className={styles.showPasswordButton}
+        onClick={handleShowOldPassword}
+      >
+        <FontAwesomeIcon icon={showOldPassword ? faEye : faEyeSlash} />
       </div>
       <input
         id="newPassword"
