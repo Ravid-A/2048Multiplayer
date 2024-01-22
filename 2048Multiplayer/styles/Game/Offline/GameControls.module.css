@@ -1,0 +1,28 @@
+/* GameControls.module.css */
+
+.game_controls {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.game_controls button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.game_controls button:hover {
+  background-color: #45a049;
+}
+
+/* Responsive Styles */
+@media screen and (min-height: 800px) {
+  .game_controls {
+    margin-top: 10px;
+  }
+}

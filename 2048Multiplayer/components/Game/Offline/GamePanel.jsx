@@ -8,10 +8,7 @@ const GamePanel = ({ game }) => {
       {game.getBoard.map((row, rowIndex) => (
         <div key={rowIndex} className={styles.row}>
           {row.map((cell, cellIndex) => (
-            <div
-              key={cellIndex}
-              className={`${styles.cell} ${styles[`cell_${cell}`]}`}
-            >
+            <div key={cellIndex} className={`${styles.cell}`}>
               {cell}
             </div>
           ))}

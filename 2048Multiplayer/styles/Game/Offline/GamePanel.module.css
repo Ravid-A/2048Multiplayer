@@ -1,0 +1,33 @@
+/* GamePanel.module.css */
+
+.game_panel {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.row {
+  display: block;
+  justify-content: space-between;
+}
+
+.cell {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  font-size: 1.5em;
+  background-color: #eee;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cell_2 {
+  background-color: #eee4da;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1024px) {
+  .game_panel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

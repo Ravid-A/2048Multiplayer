@@ -1,0 +1,36 @@
+/* GameHeading.module.css */
+
+.game_heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-bottom: 2px solid #ddd;
+}
+
+.game_heading h1 {
+  font-size: 2em;
+  margin: 0;
+  text-shadow: 2px 2px #000000;
+}
+
+.scores {
+  display: flex;
+}
+
+.score {
+  margin-right: 20px;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1024px) {
+  .game_heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .scores {
+    margin-top: 10px;
+  }
+}
