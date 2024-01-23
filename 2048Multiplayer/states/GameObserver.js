@@ -98,6 +98,7 @@ export default class GameObserver {
   }
 
   moveTiles(direction) {
+    console.log("moveTiles", direction);
     switch (direction) {
       case MoveDirection.MOVE_UP:
         this.moveUp();
@@ -115,12 +116,170 @@ export default class GameObserver {
   }
 
   isRowAvailable(row) {
-    for (let col = 0; col < tiles[0].length; col++) {
-      if (tiles[row][col] == 0) {
+    for (let col = 0; col < this.tiles[0].length; col++) {
+      if (this.tiles[row][col] == 0) {
         return true;
       }
     }
     return false;
+  }
+
+  isColAvailable(col) {
+    for (let row = 0; row < this.tiles.length; row++) {
+      if (this.tiles[row][col] == 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  moveLeft() {
+    let combined_tiles = [
+      [false, false, false, false],
+      [false, false, false, false],
+      [false, false, false, false],
+      [false, false, false, false],
+    ];
+
+    let moves = 0;
+
+    for (let col = 0; col < this.tiles[0].length; col++) {
+      for (let row = 1; row < this.tiles.length; row++) {
+        let value = this.tiles[row][col];
+
+        if (value == 0) {
+          continue;
+        }
+
+        let prev_row = row - 1;
+
+        if (prev_row >= 0) {
+          if (this.tiles[prev_row][col] == 0) {
+            do {
+              prev_row--;
+            } while (prev_row >= 0 && this.tiles[prev_row][col] == 0);
+
+            if (prev_row >= 0) {
+              if (
+                this.tiles[prev_row][col] == value &&
+                !combined_tiles[prev_row][col]
+              ) {
+                this.tiles[prev_row][col] = value * 2;
+                this.tiles[row][col] = 0;
+                combined_tiles[prev_row][col] = true;
+                this.score += value * 2;
+                moves++;
+                continue;
+              }
+            }
+
+            if (this.tiles[prev_row + 1][col] == 0) {
+              this.tiles[prev_row + 1][col] = value;
+              this.tiles[row][col] = 0;
+              moves++;
+              continue;
+            }
+          }
+
+          if (
+            this.tiles[prev_row][col] == value &&
+            !combined_tiles[prev_row][col]
+          ) {
+            this.tiles[prev_row][col] = value * 2;
+            this.tiles[row][col] = 0;
+            this.score += value * 2;
+            combined_tiles[prev_row][col] = true;
+            moves++;
+            continue;
+          }
+        }
+      }
+    }
+
+    if (moves && this.isRowAvailable(3)) {
+      let rand_col;
+      do {
+        rand_col = this.GetRandomIndex;
+      } while (this.tiles[3][rand_col] != 0);
+
+      this.tiles[3][rand_col] = this.GetRandomValue;
+    }
+  }
+
+  moveRight() {
+    let combined_tiles = [
+      [false, false, false, false],
+      [false, false, false, false],
+      [false, false, false, false],
+      [false, false, false, false],
+    ];
+
+    let moves = 0;
+
+    for (let col = 0; col < this.tiles[0].length; col++) {
+      for (let row = this.tiles.length - 2; row >= 0; row--) {
+        let value = this.tiles[row][col];
+
+        if (value == 0) {
+          continue;
+        }
+
+        let next_row = row + 1;
+
+        if (next_row < this.tiles.length) {
+          if (this.tiles[next_row][col] == 0) {
+            do {
+              next_row++;
+            } while (
+              next_row < this.tiles.length &&
+              this.tiles[next_row][col] == 0
+            );
+
+            if (next_row < this.tiles.length) {
+              if (
+                this.tiles[next_row][col] == value &&
+                !combined_tiles[next_row][col]
+              ) {
+                this.tiles[next_row][col] = value * 2;
+                this.tiles[row][col] = 0;
+                this.score += value * 2;
+                combined_tiles[next_row][col] = true;
+                moves++;
+                continue;
+              }
+            }
+
+            if (this.tiles[next_row - 1][col] == 0) {
+              this.tiles[next_row - 1][col] = value;
+              this.tiles[row][col] = 0;
+              moves++;
+              continue;
+            }
+          }
+
+          if (
+            this.tiles[next_row][col] == value &&
+            !combined_tiles[next_row][col]
+          ) {
+            this.tiles[next_row][col] = value * 2;
+            this.tiles[row][col] = 0;
+            this.score += value * 2;
+            combined_tiles[next_row][col] = true;
+            moves++;
+            continue;
+          }
+        }
+      }
+    }
+
+    if (moves && this.isRowAvailable(0)) {
+      let rand_col;
+      do {
+        rand_col = this.GetRandomIndex;
+      } while (this.tiles[0][rand_col] != 0);
+
+      this.tiles[0][rand_col] = this.GetRandomValue;
+    }
   }
 
   moveUp() {
@@ -133,52 +292,50 @@ export default class GameObserver {
 
     let moves = 0;
 
-    for (let col = 0; col < tiles[0].length; col++) {
-      for (let row = 1; row < tiles.length; row++) {
-        let value = tiles[row][col];
+    for (let row = 0; row < this.tiles.length; row++) {
+      for (let col = 1; col < this.tiles[0].length; col++) {
+        let value = this.tiles[row][col];
 
         if (value == 0) {
           continue;
         }
 
-        let prev_row = row - 1;
+        let prev_col = col - 1;
 
-        if (prev_row >= 0) {
-          if (tiles[prev_row][col] == 0) {
+        if (prev_col >= 0) {
+          if (this.tiles[row][prev_col] == 0) {
             do {
-              prev_row--;
-            } while (prev_row >= 0 && tiles[prev_row][col] == 0);
+              prev_col--;
+            } while (prev_col >= 0 && this.tiles[row][prev_col] == 0);
 
-            if (prev_row >= 0) {
-              if (
-                tiles[prev_row][col] == value &&
-                !combined_tiles[prev_row][col]
-              ) {
-                //CallUp(row,col, prev_row);
-                tiles[prev_row][col] = value * 2;
-                tiles[row][col] = 0;
-                combined_tiles[prev_row][col] = true;
-                score += value * 2;
-                moves++;
-                continue;
-              }
+            if (
+              this.tiles[row][prev_col] == value &&
+              !combined_tiles[row][prev_col]
+            ) {
+              this.tiles[row][prev_col] = value * 2;
+              this.tiles[row][col] = 0;
+              this.score += value * 2;
+              combined_tiles[row][prev_col] = true;
+              moves++;
+              continue;
             }
 
-            if (tiles[prev_row + 1][col] == 0) {
-              //CallUp(row, col, prev_row+1);
-              tiles[prev_row + 1][col] = value;
-              tiles[row][col] = 0;
+            if (this.tiles[row][prev_col + 1] == 0) {
+              this.tiles[row][prev_col + 1] = value;
+              this.tiles[row][col] = 0;
               moves++;
               continue;
             }
           }
 
-          if (tiles[prev_row][col] == value && !combined_tiles[prev_row][col]) {
-            //CallUp(row, col, prev_row);
-            tiles[prev_row][col] = value * 2;
-            tiles[row][col] = 0;
-            score += value * 2;
-            combined_tiles[prev_row][col] = true;
+          if (
+            this.tiles[row][prev_col] == value &&
+            !combined_tiles[row][prev_col]
+          ) {
+            this.tiles[row][prev_col] = value * 2;
+            this.tiles[row][col] = 0;
+            this.score += value * 2;
+            combined_tiles[row][prev_col] = true;
             moves++;
             continue;
           }
@@ -186,14 +343,87 @@ export default class GameObserver {
       }
     }
 
-    if (moves && isRowAvailable(3)) {
-      let rand_col;
+    if (moves && this.isColAvailable(3)) {
+      let rand_row;
       do {
-        rand_col = GetRandomIndex();
-      } while (tiles[3][rand_col] != 0);
+        rand_row = this.GetRandomIndex;
+      } while (this.tiles[rand_row][0] != 0);
 
-      tiles[3][rand_col] = GetRandomValue();
-      //new_tile = [3, rand_col];
+      this.tiles[rand_row][0] = this.GetRandomValue;
+    }
+  }
+
+  moveDown() {
+    let combined_tiles = [
+      [false, false, false, false],
+      [false, false, false, false],
+      [false, false, false, false],
+      [false, false, false, false],
+    ];
+
+    let moves = 0;
+
+    for (let row = 0; row < this.tiles.length; row++) {
+      for (let col = this.tiles[0].length - 2; col >= 0; col--) {
+        let value = this.tiles[row][col];
+
+        if (value == 0) {
+          continue;
+        }
+
+        let next_col = col + 1;
+
+        if (next_col < this.tiles[0].length) {
+          if (this.tiles[row][next_col] == 0) {
+            do {
+              next_col++;
+            } while (
+              next_col < this.tiles[0].length &&
+              this.tiles[row][next_col] == 0
+            );
+
+            if (
+              this.tiles[row][next_col] == value &&
+              !combined_tiles[row][next_col]
+            ) {
+              this.tiles[row][next_col] = value * 2;
+              this.tiles[row][col] = 0;
+              this.score += value * 2;
+              combined_tiles[row][next_col] = true;
+              moves++;
+              continue;
+            }
+
+            if (this.tiles[row][next_col - 1] == 0) {
+              this.tiles[row][next_col - 1] = value;
+              this.tiles[row][col] = 0;
+              moves++;
+              continue;
+            }
+          }
+
+          if (
+            this.tiles[row][next_col] == value &&
+            !combined_tiles[row][next_col]
+          ) {
+            this.tiles[row][next_col] = value * 2;
+            this.tiles[row][col] = 0;
+            this.score += value * 2;
+            combined_tiles[row][next_col] = true;
+            moves++;
+            continue;
+          }
+        }
+      }
+    }
+
+    if (moves && this.isColAvailable(0)) {
+      let rand_row;
+      do {
+        rand_row = this.GetRandomIndex;
+      } while (this.tiles[rand_row][0] != 0);
+
+      this.tiles[rand_row][0] = this.GetRandomValue;
     }
   }
 }

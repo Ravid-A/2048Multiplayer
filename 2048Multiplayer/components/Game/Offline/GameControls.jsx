@@ -9,15 +9,15 @@ const GameControls = ({ game }) => {
   const KeyToDirection = (key) => {
     switch (key) {
       case "ArrowUp":
-        return MoveDirection.Up;
+        return MoveDirection.MOVE_UP;
       case "ArrowDown":
-        return MoveDirection.Down;
+        return MoveDirection.MOVE_DOWN;
       case "ArrowLeft":
-        return MoveDirection.Left;
+        return MoveDirection.MOVE_LEFT;
       case "ArrowRight":
-        return MoveDirection.Right;
+        return MoveDirection.MOVE_RIGHT;
     }
-    return MoveDirection.None;
+    return MoveDirection.NONE;
   };
 
   const CallMoveTile = (direction) => {
@@ -26,8 +26,12 @@ const GameControls = ({ game }) => {
 
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
+      if (e.repeat) {
+        return;
+      }
       const direction = KeyToDirection(e.key);
-      if (direction !== MoveDirection.None) {
+      if (direction !== MoveDirection.NONE) {
+        e.preventDefault();
         CallMoveTile(direction);
       }
     });
