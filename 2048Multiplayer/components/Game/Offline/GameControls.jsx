@@ -1,30 +1,34 @@
 import { observer } from "mobx-react-lite";
-
-import styles from "../../../styles/Game/Offline/GameControls.module.css";
 import { useEffect } from "react";
 
+import { MoveDirection } from "../../../states/GameObserver";
+
+import styles from "../../../styles/Game/Offline/GameControls.module.css";
+
 const GameControls = ({ game }) => {
+  const KeyToDirection = (key) => {
+    switch (key) {
+      case "ArrowUp":
+        return MoveDirection.Up;
+      case "ArrowDown":
+        return MoveDirection.Down;
+      case "ArrowLeft":
+        return MoveDirection.Left;
+      case "ArrowRight":
+        return MoveDirection.Right;
+    }
+    return MoveDirection.None;
+  };
+
+  const CallMoveTile = (direction) => {
+    game.moveTiles(direction);
+  };
+
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
-      switch (e.key) {
-        case "ArrowUp":
-          console.log("up");
-          e.preventDefault();
-          break;
-        case "ArrowDown":
-          console.log("down");
-          e.preventDefault();
-          break;
-        case "ArrowLeft":
-          console.log("left");
-          e.preventDefault();
-          break;
-        case "ArrowRight":
-          console.log("right");
-          e.preventDefault();
-          break;
-        default:
-          break;
+      const direction = KeyToDirection(e.key);
+      if (direction !== MoveDirection.None) {
+        CallMoveTile(direction);
       }
     });
   }, []);
