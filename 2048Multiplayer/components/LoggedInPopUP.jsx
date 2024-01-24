@@ -11,7 +11,7 @@ export default function LoggedInPopUP({ handleDisconnect }) {
   return (
     <div className={styles.PopUp}>
       <h1>Already logged In!</h1>
-      <p>Want to disconnect?</p>
+      <p>Want to disconnect??</p>
       <button onClick={handleDisconnect}>Disconnect</button>
       <button onClick={handleStay}>Stay</button>
     </div>
