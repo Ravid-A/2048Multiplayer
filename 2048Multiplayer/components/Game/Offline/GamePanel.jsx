@@ -26,7 +26,6 @@ const GamePanel = ({ game }) => {
           ))}
         </div>
       ))}
-      <p>{GetValueIndex(8192)}</p>
     </div>
   );
 };

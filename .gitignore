@@ -1,3 +1,4 @@
 .next
 node_modules
 API_Server/.env
+snyk-linux
