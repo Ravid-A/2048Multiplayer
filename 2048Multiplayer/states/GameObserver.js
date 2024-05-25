@@ -98,7 +98,6 @@ export default class GameObserver {
   }
 
   moveTiles(direction) {
-    console.log("moveTiles", direction);
     switch (direction) {
       case MoveDirection.MOVE_UP:
         this.moveUp();
@@ -347,7 +346,7 @@ export default class GameObserver {
       let rand_row;
       do {
         rand_row = this.GetRandomIndex;
-      } while (this.tiles[rand_row][0] != 0);
+      } while (this.tiles[rand_row][3] != 0);
 
       this.tiles[rand_row][0] = this.GetRandomValue;
     }
