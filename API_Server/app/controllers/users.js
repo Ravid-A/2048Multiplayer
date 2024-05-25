@@ -1,12 +1,6 @@
-import {
-  Register,
-  Login,
-  Update,
-  UpdatePassword,
-  Delete,
-} from "../services/users.js";
+import services from "../services/users.js";
 
-const RegisterController = async (req, res) => {
+const Register = async (req, res) => {
   const { email, password, username } = req.body;
 
   if (email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) === null) {
@@ -17,7 +11,7 @@ const RegisterController = async (req, res) => {
   }
 
   try {
-    const response = await Register(email, password, username);
+    const response = await services.Register(email, password, username);
     return res.status(response.status).json(response.data);
   } catch (error) {
     return res.status(500).json({
@@ -27,11 +21,11 @@ const RegisterController = async (req, res) => {
   }
 };
 
-const LoginController = async (req, res) => {
+const Login = async (req, res) => {
   const { identifier, password } = req.body;
 
   try {
-    const response = await Login(identifier, password);
+    const response = await services.Login(identifier, password);
     return res.status(response.status).json(response.data);
   } catch (error) {
     return res.status(500).json({
@@ -41,14 +35,14 @@ const LoginController = async (req, res) => {
   }
 };
 
-const VerifyController = async (req, res) => {
+const Verify = async (req, res) => {
   return res.status(200).json({
     message: "User verified successfully",
     error: false,
   });
 };
 
-const GetDataController = async (req, res) => {
+const GetData = async (req, res) => {
   const user_data = req.user_data;
   return res.status(200).json({
     user_data: {
@@ -60,13 +54,13 @@ const GetDataController = async (req, res) => {
   });
 };
 
-const UpdateController = async (req, res) => {
+const Update = async (req, res) => {
   const { username, email } = req.body;
 
   try {
     const user_data = req.user_data;
 
-    const response = await Update(username, email, user_data);
+    const response = await services.Update(username, email, user_data);
     return res.status(response.status).json(response.data);
   } catch (error) {
     return res.status(500).json({
@@ -76,12 +70,12 @@ const UpdateController = async (req, res) => {
   }
 };
 
-const UpdatePasswordController = async (req, res) => {
+const UpdatePassword = async (req, res) => {
   const { old_password, new_password } = req.body;
   const user_data = req.user_data;
 
   try {
-    const response = await UpdatePassword(
+    const response = await services.UpdatePassword(
       old_password,
       new_password,
       user_data
@@ -95,11 +89,11 @@ const UpdatePasswordController = async (req, res) => {
   }
 };
 
-const DeleteController = async (req, res) => {
+const Delete = async (req, res) => {
   const user_data = req.user_data;
 
   try {
-    const response = await Delete(user_data);
+    const response = await services.Delete(user_data);
     return res.status(response.status).json(response.data);
   } catch (error) {
     return res.status(500).json({
@@ -109,12 +103,12 @@ const DeleteController = async (req, res) => {
   }
 };
 
-export {
-  RegisterController,
-  LoginController,
-  VerifyController,
-  GetDataController,
-  UpdateController,
-  UpdatePasswordController,
-  DeleteController,
+export default {
+  Register,
+  Login,
+  Verify,
+  GetData,
+  Update,
+  UpdatePassword,
+  Delete,
 };

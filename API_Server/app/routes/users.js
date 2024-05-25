@@ -1,28 +1,20 @@
 import express from "express";
 
-import {
-  RegisterController,
-  LoginController,
-  VerifyController,
-  GetDataController,
-  UpdateController,
-  UpdatePasswordController,
-  DeleteController,
-} from "../controllers/users.js";
+import controllers from "../controllers/users.js";
 
 import protect from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.post("/register", RegisterController);
-router.post("/login", LoginController);
+router.post("/register", controllers.Register);
+router.post("/login", controllers.Login);
 
-router.get("/verify", protect, VerifyController);
-router.get("/getdata", protect, GetDataController);
+router.get("/verify", protect, controllers.Verify);
+router.get("/getdata", protect, controllers.GetData);
 
-router.patch("/update", protect, UpdateController);
-router.patch("/updatepassword", protect, UpdatePasswordController);
+router.patch("/update", protect, controllers.Update);
+router.patch("/updatepassword", protect, controllers.UpdatePassword);
 
-router.delete("/delete", protect, DeleteController);
+router.delete("/delete", protect, controllers.Delete);
 
 export default router;

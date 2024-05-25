@@ -161,4 +161,4 @@ const Delete = async (user_data) => {
   };
 };
 
-export { Register, Login, Update, UpdatePassword, Delete };
+export default { Register, Login, Update, UpdatePassword, Delete };
