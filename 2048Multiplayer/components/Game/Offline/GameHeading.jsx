@@ -12,7 +12,7 @@ const GameHeading = ({ game }) => {
         </div>
         <div className={styles.score}>
           <p>Best</p>
-          <p>{game.getBestScore}</p>
+          <p>{game.bestScore}</p>
         </div>
       </div>
     </div>

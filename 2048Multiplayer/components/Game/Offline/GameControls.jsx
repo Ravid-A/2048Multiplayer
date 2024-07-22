@@ -3,9 +3,9 @@ import { useEffect } from "react";
 
 import { MoveDirection } from "../../../states/GameObserver";
 
-import styles from "../../styles/Game/Offline/GameControls.module.css";
+import styles from "../../../styles/Game/Offline/GameControls.module.css";
 
-const GameControls = ({ game }) => {
+const GameControls = ({ game, popup }) => {
   const KeyToDirection = (key) => {
     switch (key) {
       case "ArrowUp":
@@ -43,7 +43,9 @@ const GameControls = ({ game }) => {
 
   return (
     <div className={styles.game_controls}>
-      <button onClick={newGame}>New Game</button>
+      <button onClick={newGame} disabled={popup}>
+        New Game
+      </button>
     </div>
   );
 };

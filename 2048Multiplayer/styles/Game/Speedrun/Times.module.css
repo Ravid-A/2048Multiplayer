@@ -1,19 +1,12 @@
-.game_heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-.scores,
-.controls {
+.times {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+
   align-items: center;
 }
 
-.scores p,
-.controls p {
+.times p {
   margin: 5px 0;
   font-size: 1.2rem;
   font-weight: bold;
@@ -33,27 +26,6 @@
   margin: 0;
   font-size: 1rem;
   text-align: center;
-}
-
-.time_display {
-  background-color: #a69b86;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.score {
-  background-color: #d2b48c;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.score p {
-  margin: 0;
-  font-size: 1rem;
 }
 
 .color_1 {

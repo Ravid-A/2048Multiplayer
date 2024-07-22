@@ -1,6 +1,9 @@
 import { observer } from "mobx-react-lite";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+
 import styles from "../../../styles/Game/Speedrun/GameHeading.module.css";
+
+import Times from "./Times";
 
 const GameHeading = ({ game }) => {
   const [elapsedTime, setElapsedTime] = useState(
@@ -23,9 +26,7 @@ const GameHeading = ({ game }) => {
 
   return (
     <div className={styles.game_heading}>
-      <div className={styles.times}>
-        <Times game={game} />
-      </div>
+      <Times game={game} />
       <div className={styles.time_display}>
         <p>{elapsedTime}</p>
       </div>
@@ -36,32 +37,6 @@ const GameHeading = ({ game }) => {
         </div>
       </div>
     </div>
-  );
-};
-
-const Times = ({ game }) => {
-  const skip = game.times.filter((time) => time !== 0).length;
-  let times = [];
-
-  if (skip >= 3) {
-    times = game.times.slice(skip - 1, skip + 2);
-  } else {
-    times = game.times.slice(0, 3);
-  }
-
-  const indexToValue = (index) => {
-    index = skip >= 3 ? index + skip - 1 : index;
-    return Math.pow(2, index + 4);
-  };
-
-  return (
-    <>
-      {times.map((time, index) => (
-        <div className={styles.tile_count} key={index}>
-          {indexToValue(index)}: {!time ? "-" : game.getElapsedTime(time)}
-        </div>
-      ))}
-    </>
   );
 };
 

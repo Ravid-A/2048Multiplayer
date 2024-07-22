@@ -11,7 +11,7 @@ export const MoveDirection = {
   MOVE_RIGHT: 3,
 };
 
-const GameOver = {
+export const GameOver = {
   CONTINUE: 0,
   WON: 1,
   LOST: 2,
@@ -60,9 +60,11 @@ export default class Game {
       stop: action,
       setBestScore: action,
       setBestScoreFromDB: action,
+      getBestTimes: action,
+      getBestScore: action,
+      setBestScoreValue: action,
       setScore: action,
       getScore: computed,
-      getBestScore: computed,
       getBoard: computed,
       moveTiles: action,
       hasMoves: computed,
@@ -124,6 +126,7 @@ export default class Game {
   stop() {
     this.game_running = false;
     this.game_end_time = Date.now();
+    this.setBestScore();
   }
 
   getElapsedTime(time) {
@@ -132,6 +135,23 @@ export default class Game {
     let minutes = Math.floor(time / 60000);
     let seconds = Math.floor((time % 60000) / 1000);
     // miliscenods are 3 digits
+    let milliseconds = Math.floor(time % 1000);
+
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    seconds = seconds < 10 ? `0${seconds}` : seconds;
+    milliseconds =
+      milliseconds < 10
+        ? `00${milliseconds}`
+        : milliseconds < 100
+        ? `0${milliseconds}`
+        : milliseconds;
+
+    return `${minutes}:${seconds}.${milliseconds}`;
+  }
+
+  getFormatedTime(time) {
+    let minutes = Math.floor(time / 60000);
+    let seconds = Math.floor((time % 60000) / 1000);
     let milliseconds = Math.floor(time % 1000);
 
     minutes = minutes < 10 ? `0${minutes}` : minutes;
@@ -165,23 +185,42 @@ export default class Game {
   }
 
   async setBestScore() {
-    if (this.score > this.bestScore) {
-      this.bestScore = this.score;
+    try {
+      switch (this.game_type) {
+        case "speedrun":
+          await this.updateBestTimes();
+          break;
+        case "classic":
+          await this.updateBestScore();
+          await this.setBestScoreFromDB();
+          break;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-      const token = localStorage.getItem("token");
+  async updateBestTimes() {
+    const token = localStorage.getItem("token");
 
-      if (!token) {
-        return;
+    if (!token) {
+      return;
+    }
+
+    const url = GetAPIUrl() + "/leaderboard";
+
+    for (let i = 0; i < this.times.length; i++) {
+      if (this.times[i] === 0) {
+        continue;
       }
 
       try {
-        const url = GetAPIUrl() + "/leaderboard";
         const response = await axios.patch(
           url,
           {
             type: this.game_type,
-            part: "0",
-            score: this.bestScore,
+            part: i,
+            score: this.times[i],
           },
           {
             headers: {
@@ -196,7 +235,7 @@ export default class Game {
         const data = await response.data;
 
         if (data.error) {
-          return;
+          continue;
         }
       } catch (error) {
         console.log(error);
@@ -204,7 +243,7 @@ export default class Game {
     }
   }
 
-  async setBestScoreFromDB() {
+  async updateBestScore() {
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -212,14 +251,93 @@ export default class Game {
     }
 
     try {
-      const url = GetAPIUrl() + "/leaderboard/";
+      const url = GetAPIUrl() + "/leaderboard";
+      const response = await axios.patch(
+        url,
+        {
+          type: this.game_type,
+          part: "0",
+          score: this.score,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          validateStatus: (status) => {
+            return status < 500;
+          },
+        }
+      );
+
+      const data = await response.data;
+
+      if (data.error) {
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async setBestScoreFromDB() {
+    try {
+      if (this.game_type === "classic") {
+        this.setBestScoreValue(await this.getBestScore());
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getBestScore() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return;
+    }
+
+    const url = GetAPIUrl() + "/leaderboard";
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        type: this.game_type,
+        part: "0",
+      },
+      validateStatus: (status) => {
+        return status < 500;
+      },
+    });
+
+    const data = await response.data;
+
+    if (data.error) {
+      return;
+    }
+
+    return data.score;
+  }
+
+  async getBestTimes() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return;
+    }
+
+    const times = [0, 0, 0, 0, 0, 0, 0, 0];
+
+    const url = GetAPIUrl() + "/leaderboard";
+
+    for (let i = 0; i < this.times.length; i++) {
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
           type: this.game_type,
-          part: "0",
+          part: i,
         },
         validateStatus: (status) => {
           return status < 500;
@@ -229,25 +347,64 @@ export default class Game {
       const data = await response.data;
 
       if (data.error) {
-        return;
+        console.log(data.message);
+        continue;
       }
 
-      this.bestScore = data.score;
-    } catch (error) {
-      console.log(error);
+      times[i] = data.score;
     }
+
+    return times;
+  }
+
+  async getBestTimes() {
+    const times = [0, 0, 0, 0, 0, 0, 0, 0];
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return;
+    }
+
+    const url = GetAPIUrl() + "/leaderboard";
+
+    for (let i = 0; i < this.times.length; i++) {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          type: this.game_type,
+          part: i,
+        },
+        validateStatus: (status) => {
+          return status < 500;
+        },
+      });
+
+      const data = await response.data;
+
+      if (data.error) {
+        console.log(data.message);
+        continue;
+      }
+
+      times[i] = data.score;
+    }
+
+    return times;
   }
 
   setScore(value) {
     this.score += value;
   }
 
-  get getScore() {
-    return this.score;
+  setBestScoreValue(value) {
+    this.bestScore = value;
   }
 
-  get getBestScore() {
-    return this.bestScore;
+  get getScore() {
+    return this.score;
   }
 
   get getBoard() {
@@ -347,7 +504,8 @@ export default class Game {
                 const new_value = value * 2;
 
                 if (this.times[TimeIndex[`Index_${new_value}`]] === 0) {
-                  this.times[TimeIndex[`Index_${new_value}`]] = Date.now();
+                  this.times[TimeIndex[`Index_${new_value}`]] =
+                    Date.now() - this.game_start_time;
                 }
 
                 temp_tiles[prev_row][col] = new_value;
@@ -374,7 +532,8 @@ export default class Game {
             const new_value = value * 2;
 
             if (this.times[TimeIndex[`Index_${new_value}`]] === 0) {
-              this.times[TimeIndex[`Index_${new_value}`]] = Date.now();
+              this.times[TimeIndex[`Index_${new_value}`]] =
+                Date.now() - this.game_start_time;
             }
 
             temp_tiles[prev_row][col] = new_value;
@@ -445,7 +604,8 @@ export default class Game {
                 const new_value = value * 2;
 
                 if (this.times[TimeIndex[`Index_${new_value}`]] === 0) {
-                  this.times[TimeIndex[`Index_${new_value}`]] = Date.now();
+                  this.times[TimeIndex[`Index_${new_value}`]] =
+                    Date.now() - this.game_start_time;
                 }
 
                 temp_tiles[next_row][col] = new_value;
@@ -472,7 +632,8 @@ export default class Game {
             const new_value = value * 2;
 
             if (this.times[TimeIndex[`Index_${new_value}`]] === 0) {
-              this.times[TimeIndex[`Index_${new_value}`]] = Date.now();
+              this.times[TimeIndex[`Index_${new_value}`]] =
+                Date.now() - this.game_start_time;
             }
 
             temp_tiles[next_row][col] = new_value;
@@ -539,7 +700,8 @@ export default class Game {
               const new_value = value * 2;
 
               if (this.times[TimeIndex[`Index_${new_value}`]] === 0) {
-                this.times[TimeIndex[`Index_${new_value}`]] = Date.now();
+                this.times[TimeIndex[`Index_${new_value}`]] =
+                  Date.now() - this.game_start_time;
               }
 
               temp_tiles[row][prev_col] = new_value;
@@ -565,7 +727,8 @@ export default class Game {
             const new_value = value * 2;
 
             if (this.times[TimeIndex[`Index_${new_value}`]] === 0) {
-              this.times[TimeIndex[`Index_${new_value}`]] = Date.now();
+              this.times[TimeIndex[`Index_${new_value}`]] =
+                Date.now() - this.game_start_time;
             }
 
             temp_tiles[row][prev_col] = new_value;
@@ -635,7 +798,8 @@ export default class Game {
               const new_value = value * 2;
 
               if (this.times[TimeIndex[`Index_${new_value}`]] === 0) {
-                this.times[TimeIndex[`Index_${new_value}`]] = Date.now();
+                this.times[TimeIndex[`Index_${new_value}`]] =
+                  Date.now() - this.game_start_time;
               }
 
               temp_tiles[row][next_col] = new_value;
@@ -661,7 +825,8 @@ export default class Game {
             const new_value = value * 2;
 
             if (this.times[TimeIndex[`Index_${new_value}`]] === 0) {
-              this.times[TimeIndex[`Index_${new_value}`]] = Date.now();
+              this.times[TimeIndex[`Index_${new_value}`]] =
+                Date.now() - this.game_start_time;
             }
 
             temp_tiles[row][next_col] = new_value;
@@ -739,10 +904,6 @@ export default class Game {
     this.game_over = true;
     this.game_end_time = Date.now();
 
-    if (this.game_type === "speedrun") {
-      //this.setBestTimes();
-    } else if (this.game_type === "classic") {
-      this.setBestScore();
-    }
+    this.setBestScore();
   }
 }

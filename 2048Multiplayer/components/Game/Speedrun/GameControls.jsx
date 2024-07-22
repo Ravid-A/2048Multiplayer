@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { MoveDirection } from "../../../states/GameObserver";
 import styles from "../../../styles/Game/Speedrun/GameControls.module.css";
 
-const GameControls = ({ game }) => {
+const GameControls = ({ game, setPopup, popup }) => {
   const KeyToDirection = (key) => {
     switch (key) {
       case "ArrowUp":
@@ -46,12 +46,18 @@ const GameControls = ({ game }) => {
     if (game.game_running) {
       game.stop();
     }
+
+    setPopup("bestScores");
   };
 
   return (
     <div className={styles.game_controls}>
-      <button onClick={newGame}>New Game</button>
-      <button onClick={showTimes}>⏱</button>
+      <button onClick={newGame} disabled={popup != "none"}>
+        New Game
+      </button>
+      <button onClick={showTimes} disabled={popup != "none"}>
+        ⏱
+      </button>
     </div>
   );
 };

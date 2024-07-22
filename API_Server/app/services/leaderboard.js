@@ -59,7 +59,20 @@ const UpdateScore = async (type, part, score, user_data) => {
     };
   }
 
-  if (leaderboard.score < score) {
+  if (type === "speedrun" && leaderboard.score > score) {
+    leaderboard.score = score;
+    await leaderboard.save();
+
+    return {
+      status: 200,
+      data: {
+        error: false,
+        message: "Score updated successfully",
+      },
+    };
+  }
+
+  if (type === "classic" && leaderboard.score < score) {
     leaderboard.score = score;
     await leaderboard.save();
 

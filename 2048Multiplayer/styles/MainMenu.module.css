@@ -69,13 +69,13 @@
   align-items: center;
   justify-content: center;
   color: white;
-  height: 100%;
+  height: 99%;
   width: 20%;
   border: 1px solid #776e65;
   background: #776e65;
   margin-right: 25px;
   margin-left: -5px;
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
   margin-bottom: 0.5px;
 
   /* Make FontAwsome size a bit smaller */

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { observer } from "mobx-react-lite";
@@ -6,15 +6,25 @@ import { observer } from "mobx-react-lite";
 import GameControls from "./Offline/GameControls";
 import GameHeading from "./Offline/GameHeading";
 
+import OfflineGameOverPopUP from "../PopUps/OfflineGameOverPopUP";
+
 import styles from "../../styles/Game/OfflineGame.module.css";
 import { useRouter } from "next/router";
 
 const OfflineGame = observer(({ game }) => {
+  const [popup, setPopup] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
     game.setBestScoreFromDB();
   }, []);
+
+  useEffect(() => {
+    if (game.game_over) {
+      setPopup(true);
+    }
+  }, [game.game_over]);
 
   const handleBackButton = () => {
     router.push("/");
@@ -60,6 +70,8 @@ const OfflineGame = observer(({ game }) => {
           </div>
         </div>
       </div>
+
+      {popup && <OfflineGameOverPopUP game={game} setPopup={setPopup} />}
     </div>
   );
 });
