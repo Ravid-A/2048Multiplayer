@@ -38,19 +38,26 @@ export default class Game {
   game_over = false;
   game_running = false;
 
+  first_move = true;
+
   game_type = "";
   game_start_time = 0;
+  game_end_time = 0;
 
   times = [0, 0, 0, 0, 0, 0, 0, 0];
+
+  interval = null;
 
   constructor(game_type) {
     makeObservable(this, {
       tiles: observable,
       score: observable,
       bestScore: observable,
+      game_running: observable,
       game_over: observable,
       times: observable,
       start: action,
+      stop: action,
       setBestScore: action,
       setBestScoreFromDB: action,
       setScore: action,
@@ -74,6 +81,7 @@ export default class Game {
     this.times = temp_obj.times;
     this.tiles = temp_obj.tiles;
     this.game_type = game_type;
+    this.first_move = true;
     this.game_running = false;
   }
 
@@ -107,15 +115,15 @@ export default class Game {
     this.score = temp_obj.score;
     this.tiles = temp_obj.tiles;
     this.times = temp_obj.times;
-    this.game_running = true;
-
-    if (this.game_type === "speedrun") {
-      this.game_start_time = Date.now();
-    }
+    this.game_over = false;
+    this.first_move = true;
+    this.game_end_time = 0;
+    this.game_start_time = 0;
   }
 
   stop() {
     this.game_running = false;
+    this.game_end_time = Date.now();
   }
 
   getElapsedTime(time) {
@@ -157,7 +165,6 @@ export default class Game {
   }
 
   async setBestScore() {
-    console.log(this.score, this.bestScore);
     if (this.score > this.bestScore) {
       this.bestScore = this.score;
 
@@ -248,8 +255,17 @@ export default class Game {
   }
 
   moveTiles(direction) {
-    if (this.game_over || this.game_running === false) {
+    if (this.game_over || (!this.first_move && !this.game_running)) {
       return;
+    }
+
+    if (this.first_move) {
+      this.first_move = false;
+      this.game_running = true;
+
+      if (this.game_type === "speedrun") {
+        this.game_start_time = Date.now();
+      }
     }
 
     if (Date.now() - this.last_pressed < COOLDOWN) {
@@ -721,6 +737,12 @@ export default class Game {
   gameOver() {
     this.game_running = false;
     this.game_over = true;
-    this.setBestScore();
+    this.game_end_time = Date.now();
+
+    if (this.game_type === "speedrun") {
+      //this.setBestTimes();
+    } else if (this.game_type === "classic") {
+      this.setBestScore();
+    }
   }
 }

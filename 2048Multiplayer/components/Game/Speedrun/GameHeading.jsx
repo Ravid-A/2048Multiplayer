@@ -8,12 +8,18 @@ const GameHeading = ({ game }) => {
   );
 
   useEffect(() => {
+    if (!game.game_running) {
+      return;
+    }
+
     const interval = setInterval(() => {
       setElapsedTime(game.getElapsedTime(new Date()));
     }, 1);
 
-    return () => clearInterval(interval);
-  }, [game]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [game.game_running]);
 
   return (
     <div className={styles.game_heading}>
