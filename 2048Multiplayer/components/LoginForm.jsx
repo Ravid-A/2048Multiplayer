@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 import {
   faEye,
   faEyeSlash,
   faSpinner,
-  faLeftLong,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import LoggedInPopUP from "./LoggedInPopUP";
+import LoggedInPopUP from "./PopUps/LoggedInPopUP";
 
 import styles from "../styles/LoginForm.module.css";
 
@@ -22,17 +20,10 @@ export default function LoginForm({
   loading,
   handleDisconnect,
 }) {
-  const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (event) => {
     setUser({ ...user, [event.target.id]: event.target.value, msg: "" });
-  };
-
-  const handleBackButton = () => {
-    if (loading || loggedIn) return;
-    router.push("/");
   };
 
   const handleShowPassword = () => {
@@ -42,9 +33,6 @@ export default function LoginForm({
   return (
     <div className={styles.login}>
       <div className={styles.login_container}>
-        <div className={styles.backButton} onClick={handleBackButton}>
-          <FontAwesomeIcon icon={faLeftLong} />
-        </div>
         <div className={styles.Titles}>
           <div className={styles.Title}>2048</div>
           <div className={styles.SubTitle}>Multiplayer</div>

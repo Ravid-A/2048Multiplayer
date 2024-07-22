@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { observer } from "mobx-react-lite";
 
-import GameControls from "./Offline/GameControls";
-import GameHeading from "./Offline/GameHeading";
+import GameControls from "./Speedrun/GameControls";
+import GameHeading from "./Speedrun/GameHeading";
 
-import styles from "../../styles/Game/OfflineGame.module.css";
+import styles from "../../styles/Game/SpeedrunGame.module.css";
 import { useRouter } from "next/router";
 
-const OfflineGame = observer(({ game }) => {
+const SpeedrunGame = observer(({ game }) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -64,4 +64,4 @@ const OfflineGame = observer(({ game }) => {
   );
 });
 
-export default OfflineGame;
+export default SpeedrunGame;

@@ -43,22 +43,47 @@
 }
 
 .MenuButton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   font-size: 20px;
   width: 80%;
   max-width: 300px;
   font-weight: bold;
   color: white;
   height: 3em;
-  border: 2px solid #4caf50;
+  border: none;
   border-radius: 8px;
-  background: #4caf50;
+  background: #8b7d6b;
   margin-bottom: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .MenuButton:hover {
-  background: #45a049;
+  background: #7a6b5a; /* Slightly darker shade for hover effect */
+}
+
+.SideIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  height: 100%;
+  width: 20%;
+  border: 1px solid #776e65;
+  background: #776e65;
+  margin-right: 25px;
+  margin-left: -5px;
+  border-radius: 8px;
+  margin-bottom: 0.5px;
+
+  /* Make FontAwsome size a bit smaller */
+}
+
+.ButtonText {
+  flex: 1; /* Ensure the text takes up the remaining space */
+  text-align: left; /* Align text to the left */
 }
 
 /* Responsive styles for smaller screens */
@@ -86,7 +111,7 @@
 @media screen and (min-height: 800px) {
   .MainMenu {
     width: 50vw;
-    height: 80vh;
+    height: 85vh;
     max-width: 1000px;
   }
 

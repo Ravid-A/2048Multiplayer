@@ -6,7 +6,14 @@ import styles from "../styles/MainMenu.module.css";
 import GetUser from "../utilities/GetUser";
 
 import MenuUser from "./User/MenuUser";
-import NoConnectedPopUP from "./NotConnectedPopUP";
+import NoConnectedPopUP from "./PopUps/NotConnectedPopUP";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faUserGroup,
+  faStopwatch,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function MainMenu() {
   const router = useRouter();
@@ -20,6 +27,7 @@ export default function MainMenu() {
 
     if (!user) {
       setPopUp("none");
+      router.push("/login");
       return;
     }
 
@@ -30,23 +38,6 @@ export default function MainMenu() {
   useEffect(() => {
     getUser();
   }, []);
-
-  const onClick = (event) => {
-    const page = event.target.value;
-
-    // alert("Coming soon! " + page + " mode");
-    // return;
-
-    switch (page) {
-      case "classic":
-        router.push("/classic");
-        break;
-      default:
-        if (user) router.push("/" + page);
-        else setPopUp("not_connected");
-        break;
-    }
-  };
 
   return (
     <>
@@ -60,35 +51,46 @@ export default function MainMenu() {
         <div className={styles.Menu}>
           <button
             className={styles.MenuButton}
-            onClick={onClick}
-            value="classic"
+            onClick={() => router.push("/classic")}
             disabled={popUp != "none"}
           >
-            Classic 2048
+            <div className={styles.SideIcon}>
+              <FontAwesomeIcon icon={faPlay} />
+            </div>
+            <div className={styles.ButtonText}>Classic 2048</div>
           </button>
           <button
             className={styles.MenuButton}
-            onClick={onClick}
+            onClick={() => router.push("/multiplayer")}
             value="multiplayer"
             disabled={popUp != "none"}
           >
-            Multiplayer
+            <div className={styles.SideIcon}>
+              <FontAwesomeIcon icon={faUserGroup} />
+            </div>
+            <div className={styles.ButtonText}>Multiplayer</div>
           </button>
           <button
             className={styles.MenuButton}
-            onClick={onClick}
+            onClick={() => router.push("/speedrun")}
             value="speedrun"
             disabled={popUp != "none"}
           >
-            Speedrun
+            <div className={styles.SideIcon}>
+              <FontAwesomeIcon icon={faStopwatch} />
+            </div>
+            <div className={styles.ButtonText}>Speedrun</div>
           </button>
           <button
             className={styles.MenuButton}
-            onClick={onClick}
+            onClick={() => router.push("/private")}
             value="private"
             disabled={popUp != "none"}
           >
-            Private Lobby
+            <div className={styles.SideIcon}>
+              <FontAwesomeIcon icon={faUserGroup} />
+            </div>
+            <div className={styles.ButtonText}>Private Lobby</div>
           </button>
         </div>
         {popUp == "not_connected" && <NoConnectedPopUP setPopUp={setPopUp} />}

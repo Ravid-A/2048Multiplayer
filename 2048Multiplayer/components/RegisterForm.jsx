@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import styles from "../styles/RegisterForm.module.css";
 
-import LoggedInPopUP from "./LoggedInPopUP";
+import LoggedInPopUP from "./PopUps/LoggedInPopUP";
 
 export default function RegisterForm({
   handleSubmit,
@@ -33,7 +33,7 @@ export default function RegisterForm({
 
   const handleBackButton = () => {
     if (loading || loggedIn) return;
-    router.push("/");
+    router.push("/login");
   };
 
   const handleShowPassword = () => {

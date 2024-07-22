@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import styles from "../styles/NotConnectedPopUP.module.css";
+import styles from "../../styles/NotConnectedPopUP.module.css";
 
 export default function NoConnectedPopUP({ setPopUp }) {
   const router = useRouter();
