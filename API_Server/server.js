@@ -1,4 +1,5 @@
 import app from "./app/index.js";
+import "./socket/index.js";
 
 import database from "./app/models/database.js";
 
