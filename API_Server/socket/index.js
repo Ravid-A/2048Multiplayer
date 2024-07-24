@@ -1,6 +1,8 @@
 import express from "express";
 import { Server } from "socket.io";
 
+import Sockets from "./classes.js";
+
 const PORT = process.env.SOCKET_PORT || 3002;
 
 const app = express();
@@ -16,70 +18,46 @@ const io = new Server(server, {
   },
 });
 
+const sockets = new Sockets();
+
 io.on("connection", (socket) => {
   console.log("New connection", socket.id);
 
-  const sendMessage = (message) => {
-    socket.broadcast.emit("message", {
-      username: socket.username,
-      message: `${socket.username}: ${message}`,
-      show_avatar: true,
-    });
-  };
-
-  const emitFromServer = (type, message) => {
-    io.sockets.emit(type, message);
-  };
-
-  // Return to React-Native
-
-  // emit the username when the user connects
-  socket.on("username", (username) => {
-    socket.username = username;
-    console.log(`${username} connected`);
-    emitFromServer("user_state_change", {
-      username: username,
-      message: `${username} connected`,
-      show_avatar: false,
-    });
-  });
-
-  // emit the message when the user sends a message
-  socket.on("message", (data) => {
-    if (!socket.username) {
-      return;
+  socket.on("create-room", (id) => {
+    console.log("Create room", id);
+    try {
+      sockets.createRoom(socket);
+      socket.emit("room-created");
+    } catch (error) {
+      socket.emit("room-error", { message: error.message, id: id });
     }
-
-    console.log(`${socket.username} sent a message: ${data}`);
-    sendMessage(data);
   });
 
-  // emit the message when the user disconnects
+  socket.on("join-room", (id) => {
+    console.log("Join room", id);
+    try {
+      sockets.addToRoom(id, socket);
+      socket.emit("room-joined", { id: id });
+    } catch (error) {
+      socket.emit("room-error", { message: error.message, id: id });
+      console.log(error);
+    }
+  });
+
+  socket.on("leave-room", (id) => {
+    try {
+      sockets.removeFromRoom(id, socket);
+      socket.emit("room-left", { id: id });
+    } catch (error) {
+      socket.emit("room-error", { message: error.message, id: id });
+    }
+  });
+
   socket.on("disconnect", () => {
-    if (!socket.username) {
-      return;
-    }
-
-    console.log(`${socket.username} disconnected`);
-    emitFromServer("user_state_change", {
-      username: socket.username,
-      message: `${socket.username} disconnected`,
-      show_avatar: false,
-    });
-    socket.username = null;
+    console.log("User disconnected", socket.id);
   });
 
-  socket.on("user_disconnect", () => {
-    if (!socket.username) {
-      return;
-    }
-
-    console.log(`${socket.username} disconnected`);
-    emitFromServer("user_state_change", {
-      username: socket.username,
-      message: `${socket.username} disconnected`,
-      show_avatar: false,
-    });
-    socket.username = null;
+  socket.on("close", () => {
+    console.log("User disconnected", socket.id);
   });
 });
