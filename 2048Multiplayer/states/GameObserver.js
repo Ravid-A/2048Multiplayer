@@ -126,9 +126,16 @@ export default class Game {
     this.tiles = temp_obj.tiles;
     this.times = temp_obj.times;
     this.game_over = false;
-    this.first_move = true;
     this.game_end_time = 0;
-    this.game_start_time = 0;
+
+    if (this.game_type === "multiplayer") {
+      this.first_move = false;
+      this.game_running = true;
+      this.game_start_time = Date.now();
+    } else {
+      this.first_move = true;
+      this.game_start_time = 0;
+    }
   }
 
   stop(update = true) {
@@ -446,7 +453,7 @@ export default class Game {
       this.first_move = false;
       this.game_running = true;
 
-      if (this.game_type !== "speedrun") {
+      if (this.game_type === "speedrun") {
         this.game_start_time = Date.now();
       }
     }

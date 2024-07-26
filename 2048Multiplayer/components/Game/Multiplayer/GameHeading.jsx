@@ -8,19 +8,19 @@ const GameHeading = ({ game }) => {
     game.getElapsedTime(new Date())
   );
 
-  // useEffect(() => {
-  //   if (!game.game_running) {
-  //     return;
-  //   }
+  useEffect(() => {
+    if (!game.game_running) {
+      return;
+    }
 
-  //   const interval = setInterval(() => {
-  //     setElapsedTime(game.getElapsedTime(new Date()));
-  //   }, 1);
+    const interval = setInterval(() => {
+      setElapsedTime(game.getElapsedTime(new Date()));
+    }, 1);
 
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [game.game_running]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [game.game_running]);
 
   return (
     <div className={styles.game_heading}>
