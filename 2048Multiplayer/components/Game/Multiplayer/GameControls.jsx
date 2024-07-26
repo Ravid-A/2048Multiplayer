@@ -5,7 +5,7 @@ import { MoveDirection } from "../../../states/GameObserver";
 
 import styles from "../../../styles/Game/Offline/GameControls.module.css";
 
-const GameControls = ({ game, popup }) => {
+const GameControls = ({ game, status }) => {
   const KeyToDirection = (key) => {
     switch (key) {
       case "ArrowUp":
@@ -40,16 +40,14 @@ const GameControls = ({ game, popup }) => {
     };
   }, []);
 
-  const newGame = () => {
-    game.start();
-  };
-
   return (
-    <div className={styles.game_controls}>
-      <button onClick={newGame} disabled={popup}>
-        New Game
-      </button>
-    </div>
+    <>
+      {status && (
+        <div className={styles.game_controls}>
+          <div> {status} </div>
+        </div>
+      )}
+    </>
   );
 };
 

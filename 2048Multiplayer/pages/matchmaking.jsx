@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-import PrivateLobby from "../components/PrivateLobby";
+import Matchmaking from "../components/Matchmaking";
 
 import GetUser from "../utilities/GetUser";
 
-const PrivateLobbyPage = () => {
+const MatchmakingPage = () => {
   const router = useRouter();
 
   const [user, setUser] = useState(null);
@@ -25,7 +25,7 @@ const PrivateLobbyPage = () => {
     getUser();
   }, []);
 
-  return <PrivateLobby user={user} />;
+  return <Matchmaking user={user} />;
 };
 
-export default PrivateLobbyPage;
+export default MatchmakingPage;

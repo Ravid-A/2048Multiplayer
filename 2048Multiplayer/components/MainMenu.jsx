@@ -61,7 +61,7 @@ export default function MainMenu() {
           </button>
           <button
             className={styles.MenuButton}
-            onClick={() => router.push("/multiplayer")}
+            onClick={() => router.push("/matchmaking")}
             value="multiplayer"
             disabled={popUp != "none"}
           >

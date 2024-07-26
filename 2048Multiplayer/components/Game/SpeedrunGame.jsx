@@ -1,17 +1,17 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { observer } from "mobx-react-lite";
 
 import GameControls from "./Speedrun/GameControls";
 import GameHeading from "./Speedrun/GameHeading";
+import GamePanel from "./GamePanel";
 
 import BestScoresPopUp from "../PopUps/BestScoresPopUp";
 import SpeedrunPopUp from "../PopUps/SpeedrunPopUp";
 
 import styles from "../../styles/Game/SpeedrunGame.module.css";
 import { useRouter } from "next/router";
-import { set } from "mobx";
 
 const SpeedrunGame = observer(({ game }) => {
   const router = useRouter();
@@ -28,14 +28,6 @@ const SpeedrunGame = observer(({ game }) => {
     }
   }, [game.game_over]);
 
-  // GetValueColorIndex with useMemo
-  const GetValueColorIndex = useMemo(() => {
-    return (value) => {
-      if (value === 0) return 0;
-      return Math.log2(value);
-    };
-  }, []);
-
   return (
     <div className={styles.game}>
       <div className={styles.game_container}>
@@ -49,24 +41,7 @@ const SpeedrunGame = observer(({ game }) => {
 
         <GameHeading game={game} />
         <GameControls game={game} setPopup={setPopup} popup={popup} />
-        <div className={styles.game_board}>
-          <div className={styles.game_panel}>
-            {game.getBoard.map((row, rowIndex) => (
-              <div key={rowIndex} className={styles.row}>
-                {row.map((cell, cellIndex) => (
-                  <button
-                    key={cellIndex}
-                    className={`${styles.game_button} ${styles.button} ${
-                      styles[`color_${GetValueColorIndex(cell)}`]
-                    }`}
-                  >
-                    {cell === 0 ? "_" : cell}
-                  </button>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
+        <GamePanel game={game} />
       </div>
       {popup === "bestScores" && (
         <BestScoresPopUp game={game} setPopup={setPopup} />

@@ -28,15 +28,18 @@ const TimeIndex = {
   Index_2048: 7,
 };
 
-const COOLDOWN = 200;
+const COOLDOWN = 100;
 
 export default class Game {
   tiles = [];
   score = 0;
+  opponent_score = 0;
   bestScore = 0;
   last_pressed = Date.now();
   game_over = false;
   game_running = false;
+
+  updateScoreFunc = () => {};
 
   first_move = true;
 
@@ -52,10 +55,13 @@ export default class Game {
     makeObservable(this, {
       tiles: observable,
       score: observable,
+      opponent_score: observable,
       bestScore: observable,
       game_running: observable,
       game_over: observable,
       times: observable,
+      updateScoreFunc: observable,
+      setScoreUpdate: action,
       start: action,
       stop: action,
       setBestScore: action,
@@ -64,7 +70,9 @@ export default class Game {
       getBestScore: action,
       setBestScoreValue: action,
       setScore: action,
+      setOpponentScore: action,
       getScore: computed,
+      getOpponentScore: computed,
       getBoard: computed,
       moveTiles: action,
       hasMoves: computed,
@@ -123,10 +131,12 @@ export default class Game {
     this.game_start_time = 0;
   }
 
-  stop() {
+  stop(update = true) {
     this.game_running = false;
     this.game_end_time = Date.now();
-    this.setBestScore();
+    if (update) {
+      this.setBestScore();
+    }
   }
 
   getElapsedTime(time) {
@@ -182,6 +192,10 @@ export default class Game {
 
   get GetRandomValue() {
     return 2 * (Math.floor(Math.random() * 2) + 1);
+  }
+
+  setScoreUpdate(func) {
+    this.updateScoreFunc = func;
   }
 
   async setBestScore() {
@@ -396,7 +410,15 @@ export default class Game {
   }
 
   setScore(value) {
-    this.score += value;
+    if (this.game_type === "multiplayer" && this.score < value) {
+      this.updateScoreFunc(value);
+    }
+
+    this.score = value;
+  }
+
+  setOpponentScore(value) {
+    this.opponent_score = value;
   }
 
   setBestScoreValue(value) {
@@ -405,6 +427,10 @@ export default class Game {
 
   get getScore() {
     return this.score;
+  }
+
+  get getOpponentScore() {
+    return this.opponent_score;
   }
 
   get getBoard() {
@@ -420,7 +446,7 @@ export default class Game {
       this.first_move = false;
       this.game_running = true;
 
-      if (this.game_type === "speedrun") {
+      if (this.game_type !== "speedrun") {
         this.game_start_time = Date.now();
       }
     }
@@ -557,7 +583,7 @@ export default class Game {
     }
 
     this.tiles = temp_tiles;
-    this.score = score;
+    this.setScore(score);
 
     if (this.hasMoves != GameOver.CONTINUE) {
       this.gameOver();
@@ -657,7 +683,7 @@ export default class Game {
     }
 
     this.tiles = temp_tiles;
-    this.score = score;
+    this.setScore(score);
 
     if (this.hasMoves != GameOver.CONTINUE) {
       this.gameOver();
@@ -752,7 +778,7 @@ export default class Game {
     }
 
     this.tiles = temp_tiles;
-    this.score = score;
+    this.setScore(score);
 
     if (this.hasMoves != GameOver.CONTINUE) {
       this.gameOver();
@@ -850,7 +876,7 @@ export default class Game {
     }
 
     this.tiles = temp_tiles;
-    this.score = score;
+    this.setScore(score);
 
     if (this.hasMoves != GameOver.CONTINUE) {
       this.gameOver();

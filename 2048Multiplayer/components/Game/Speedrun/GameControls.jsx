@@ -33,6 +33,7 @@ const GameControls = ({ game, setPopup, popup }) => {
       }
     };
     document.addEventListener("keydown", handleKeyDown);
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };

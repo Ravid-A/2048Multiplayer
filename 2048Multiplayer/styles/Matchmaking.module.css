@@ -11,10 +11,13 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 600px;
+  position: relative;
 }
 
 .backButton {
   position: absolute;
+  top: 20px;
+  left: 20px;
   font-size: 35px;
   cursor: pointer;
   font-weight: bold;
@@ -41,4 +44,29 @@
   border-radius: 6px;
   background: lightcoral;
   transform: translate(200%, -50%);
+}
+
+.matchmakingContent {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.matchmakingContent h2 {
+  font-size: 24px;
+  color: #776e65;
+}
+
+.opponentInfo {
+  margin-top: 20px;
+}
+
+.opponentInfo h3 {
+  font-size: 20px;
+  color: #776e65;
+}
+
+.opponentInfo p {
+  font-size: 18px;
+  color: #773e65;
+  font-weight: bold;
 }
