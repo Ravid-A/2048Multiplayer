@@ -46,6 +46,11 @@ const GameControls = ({ game, setPopup, popup }) => {
   const showTimes = () => {
     if (game.game_running) {
       game.stop();
+
+      setTimeout(() => {
+        setPopup("bestScores");
+      }, 500);
+      return;
     }
 
     setPopup("bestScores");
