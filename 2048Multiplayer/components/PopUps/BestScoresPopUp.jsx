@@ -18,8 +18,6 @@ export default function BestScoresPopUp({ game, setPopup }) {
     getTimes();
   }, [game]);
 
-  console.log(times);
-
   const game_obj = {
     times: times,
     getFormatedTime: game.getFormatedTime,

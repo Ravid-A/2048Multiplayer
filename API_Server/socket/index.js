@@ -33,7 +33,6 @@ class GameServer {
 
   setupSocketHandlers() {
     this.io.on("connection", (socket) => {
-      console.log("New connection", socket.id);
       this.sockets.set(socket.id, socket);
 
       socket.on("init", (user, gameId) => this.initUser(socket, user, gameId));
@@ -69,7 +68,6 @@ class GameServer {
   }
 
   initUser(socket, user, gameId) {
-    console.log("User initialized", user);
     socket.user = user;
 
     if (gameId) {
@@ -128,8 +126,6 @@ class GameServer {
         Math.floor(Math.random() * this.waitingPlayers.size)
       ];
 
-      console.log("Match found", socket.id, opponent.id);
-
       this.waitingPlayers.delete(opponent);
       socket.emit("waitingForOpponent");
       setTimeout(() => {
@@ -152,10 +148,6 @@ class GameServer {
   }
 
   joinPrivateGame(player2, gameId) {
-    console.log("Joining private game", player2.id, gameId);
-
-    // gameId to uuidv4
-
     const player1 = this.privateGames.get(gameId);
     if (!player1) {
       this.EmitError(player2, "Game ID does not exist");
@@ -171,7 +163,6 @@ class GameServer {
   }
 
   createGame(player1, player2) {
-    console.log("Creating game", player1.id, player2.id);
     const gameId = this.genUuidv4();
     const game = {
       players: [player1.user.id, player2.user.id],
@@ -197,7 +188,6 @@ class GameServer {
   }
 
   updateScore(socket, gameId, score) {
-    console.log("Updating score", gameId, score);
     const game = this.activeGames.get(gameId);
     if (!game) {
       this.EmitError(socket, "Invalid game ID");
@@ -281,12 +271,6 @@ class GameServer {
 
     let winner =
       reason == GameOver.WON ? socket : game.players_sockets[opponentIndex];
-    console.log(
-      "Game should end",
-      gameId,
-      reason_detailed,
-      winner.user.username
-    );
 
     this.endGame(gameId, reason_detailed, winner);
   }
@@ -328,7 +312,6 @@ class GameServer {
   }
 
   handleDisconnect(socket) {
-    console.log("User disconnected", socket.id);
     this.waitingPlayers.delete(socket);
 
     // go through active games and end the game if the player is in it

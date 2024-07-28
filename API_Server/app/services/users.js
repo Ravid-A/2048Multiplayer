@@ -12,7 +12,6 @@ const Register = async (email, password, username) => {
   const userExists = await CheckIfUserExists(email, username);
 
   if (userExists) {
-    console.log("User exists ", userExists);
     return {
       status: 400,
       data: {

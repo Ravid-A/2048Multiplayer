@@ -142,12 +142,11 @@ export default class Game {
     }
   }
 
-  stop(update = true) {
+  stop() {
     this.game_running = false;
     this.game_end_time = Date.now();
-    if (update) {
-      this.setBestScore();
-    }
+
+    this.setBestScore();
   }
 
   getElapsedTime(time) {
@@ -376,7 +375,6 @@ export default class Game {
       const data = await response.data;
 
       if (data.error) {
-        console.log(data.message);
         continue;
       }
 
@@ -414,7 +412,6 @@ export default class Game {
       const data = await response.data;
 
       if (data.error) {
-        console.log(data.message);
         continue;
       }
 
