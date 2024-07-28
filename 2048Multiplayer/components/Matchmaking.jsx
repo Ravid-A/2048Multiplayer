@@ -60,6 +60,8 @@ const Matchmaking = ({ user }) => {
   }, [user]);
 
   const handleBackButton = () => {
+    if (gameId) return;
+
     if (socket) {
       socket.disconnect();
     }

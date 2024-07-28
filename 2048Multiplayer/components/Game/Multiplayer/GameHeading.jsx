@@ -34,7 +34,7 @@ const GameHeading = ({ game }) => {
         </div>
         <div className={styles.scores}>
           <div className={styles.score}>
-            <p>Opponent Score</p>
+            <p>Opponent's Score</p>
             <p>{game.getOpponentScore}</p>
           </div>
         </div>

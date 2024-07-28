@@ -13,6 +13,12 @@ const io = new Server(httpServer, {
   },
 });
 
+const GameOver = {
+  CONTINUE: 0,
+  WON: 1,
+  LOST: 2,
+};
+
 class GameServer {
   constructor(io) {
     this.io = io;
@@ -47,6 +53,12 @@ class GameServer {
         this.updateScore(socket, gameId, score)
       );
 
+      socket.on("shouldGameEnd", (gameId, reason) =>
+        this.shouldGameEnd(socket, gameId, reason)
+      );
+
+      socket.on("playAgain", (gameId) => this.playAgain(socket, gameId));
+
       socket.on("disconnect", () => this.handleDisconnect(socket));
     });
   }
@@ -60,6 +72,11 @@ class GameServer {
 
       if (!game) {
         this.EmitError(socket, "Invalid game ID");
+        return;
+      }
+
+      if (game.ended) {
+        this.EmitError(socket, "Game has ended");
         return;
       }
 
@@ -78,12 +95,17 @@ class GameServer {
           game.players_sockets.forEach((playerSocket) => {
             playerSocket.emit("gameStart");
           });
+          game.timerId = setTimeout(
+            () => this.timeUp(gameId),
+            this.gameTimeLimit
+          );
         }, 2000);
       }
 
       setTimeout(() => {
         if (game.players_sockets.includes(null)) {
           this.EmitError(socket, "Opponent did not join");
+          this.activeGames.delete(gameId);
         }
       }, 10000);
     }
@@ -148,10 +170,7 @@ class GameServer {
     const game = {
       players: [player1.user.id, player2.user.id],
       players_sockets: [null, null],
-      timerId: setTimeout(
-        () => this.endGame(gameId, "Time's up"),
-        this.gameTimeLimit
-      ),
+      scores: [0, 0],
     };
     this.activeGames.set(gameId, game);
 
@@ -180,24 +199,126 @@ class GameServer {
     }
 
     const playerIndex = game.players.indexOf(socket.user.id);
+    if (playerIndex === -1) {
+      this.EmitError(socket, "Invalid player ID");
+      return;
+    }
+
+    game.scores[playerIndex] = score;
 
     // send score to opponent
     const opponentIndex = playerIndex === 0 ? 1 : 0;
     game.players_sockets[opponentIndex].emit("opponentScore", score);
   }
 
-  endGame(gameId, reason) {
+  timeUp(gameId) {
+    const game = this.activeGames.get(gameId);
+    if (!game) return;
+
+    const player1 = {
+      socket: game.players_sockets[0],
+      score: game.scores[0],
+    };
+
+    const player2 = {
+      socket: game.players_sockets[1],
+      score: game.scores[1],
+    };
+
+    let winner = player1.score > player2.score ? player1 : player2;
+
+    let reason = `${winner.socket.user.username} won the game`;
+
+    this.endGame(gameId, reason, winner.socket);
+  }
+
+  endGame(gameId, reason, winner) {
     const game = this.activeGames.get(gameId);
     if (!game) return;
 
     clearTimeout(game.timerId);
-    this.activeGames.delete(gameId);
+    game.ended = true;
+    this.activeGames.set(gameId, game);
+
+    const wantedToPlayAgain = this.playAgainRequests.has(gameId);
 
     game.players_sockets.forEach((playerSocket) => {
       if (playerSocket) {
-        playerSocket.emit("gameEnd", reason);
+        playerSocket.emit(
+          "gameEnd",
+          reason,
+          winner.id === playerSocket.id,
+          wantedToPlayAgain
+        );
       }
     });
+  }
+
+  shouldGameEnd(socket, gameId, reason) {
+    const game = this.activeGames.get(gameId);
+    if (!game) {
+      this.EmitError(socket, "Invalid game ID");
+      return;
+    }
+
+    let reason_detailed =
+      reason == GameOver.WON
+        ? `${socket.user.username} won his game`
+        : `${socket.user.username} lost his game`;
+
+    const playerIndex = game.players_sockets.indexOf(socket);
+    if (playerIndex === -1) {
+      this.EmitError(socket, "Invalid player ID");
+      return;
+    }
+
+    const opponentIndex = playerIndex === 0 ? 1 : 0;
+
+    let winner =
+      reason == GameOver.WON ? socket : game.players_sockets[opponentIndex];
+    console.log(
+      "Game should end",
+      gameId,
+      reason_detailed,
+      winner.user.username
+    );
+
+    this.endGame(gameId, reason_detailed, winner);
+  }
+
+  playAgain(socket, gameId) {
+    const game = this.activeGames.get(gameId);
+    if (!game) {
+      this.EmitError(socket, "Invalid game ID");
+      return;
+    }
+
+    if (this.playAgainRequests.has(gameId)) {
+      if (this.playAgainRequests.get(gameId) === socket) {
+        this.EmitError(socket, "You already requested to play again");
+        return;
+      }
+
+      // both players requested to play again
+      const player1 = game.players_sockets[0];
+      const player2 = game.players_sockets[1];
+
+      game.scores = [0, 0];
+      this.activeGames.set(gameId, game);
+
+      player1.emit("gameRestart");
+      player2.emit("gameRestart");
+
+      this.playAgainRequests.delete(gameId);
+    } else {
+      this.playAgainRequests.set(gameId, socket);
+
+      // notify the other player
+      const playerIndex = game.players_sockets.indexOf(socket);
+      const opponentIndex = playerIndex === 0 ? 1 : 0;
+      const opponentSocket = game.players_sockets[opponentIndex];
+      opponentSocket.emit("playAgainRequest", socket.user.username);
+    }
   }
 
   handleDisconnect(socket) {
@@ -208,7 +329,14 @@ class GameServer {
     this.activeGames.forEach((game, gameId) => {
       const playerIndex = game.players_sockets.indexOf(socket);
       if (playerIndex !== -1) {
-        this.endGame(gameId, "Opponent disconnected");
+        const opponentIndex = playerIndex === 0 ? 1 : 0;
+        const opponentSocket = game.players_sockets[opponentIndex];
+        this.endGame(
+          gameId,
+          `${socket.user.username} disconnected`,
+          opponentSocket
+        );
+        this.activeGames.delete(gameId);
       }
     });
   }

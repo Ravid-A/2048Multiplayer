@@ -40,6 +40,7 @@ export default class Game {
   game_running = false;
 
   updateScoreFunc = () => {};
+  endGameFunc = () => {};
 
   first_move = true;
 
@@ -61,7 +62,9 @@ export default class Game {
       game_over: observable,
       times: observable,
       updateScoreFunc: observable,
+      endGameFunc: observable,
       setScoreUpdate: action,
+      setEndGameFunc: action,
       start: action,
       stop: action,
       setBestScore: action,
@@ -127,6 +130,7 @@ export default class Game {
     this.times = temp_obj.times;
     this.game_over = false;
     this.game_end_time = 0;
+    this.opponent_score = 0;
 
     if (this.game_type === "multiplayer") {
       this.first_move = false;
@@ -203,6 +207,10 @@ export default class Game {
 
   setScoreUpdate(func) {
     this.updateScoreFunc = func;
+  }
+
+  setEndGameFunc(func) {
+    this.endGameFunc = func;
   }
 
   async setBestScore() {
@@ -592,8 +600,9 @@ export default class Game {
     this.tiles = temp_tiles;
     this.setScore(score);
 
-    if (this.hasMoves != GameOver.CONTINUE) {
-      this.gameOver();
+    const hasMoves = this.hasMoves;
+    if (hasMoves != GameOver.CONTINUE) {
+      this.gameOver(hasMoves);
     }
   }
 
@@ -692,8 +701,9 @@ export default class Game {
     this.tiles = temp_tiles;
     this.setScore(score);
 
-    if (this.hasMoves != GameOver.CONTINUE) {
-      this.gameOver();
+    const hasMoves = this.hasMoves;
+    if (hasMoves != GameOver.CONTINUE) {
+      this.gameOver(hasMoves);
     }
   }
 
@@ -787,8 +797,9 @@ export default class Game {
     this.tiles = temp_tiles;
     this.setScore(score);
 
-    if (this.hasMoves != GameOver.CONTINUE) {
-      this.gameOver();
+    const hasMoves = this.hasMoves;
+    if (hasMoves != GameOver.CONTINUE) {
+      this.gameOver(hasMoves);
     }
   }
 
@@ -885,8 +896,9 @@ export default class Game {
     this.tiles = temp_tiles;
     this.setScore(score);
 
-    if (this.hasMoves != GameOver.CONTINUE) {
-      this.gameOver();
+    const hasMoves = this.hasMoves;
+    if (hasMoves != GameOver.CONTINUE) {
+      this.gameOver(hasMoves);
     }
   }
 
@@ -932,11 +944,15 @@ export default class Game {
     return GameOver.LOST;
   }
 
-  gameOver() {
+  gameOver(reason) {
     this.game_running = false;
     this.game_over = true;
     this.game_end_time = Date.now();
 
     this.setBestScore();
+
+    if (this.game_type === "multiplayer") {
+      this.endGameFunc(reason);
+    }
   }
 }

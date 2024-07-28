@@ -3,15 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import io from "socket.io-client";
+import { observer } from "mobx-react-lite";
 
 import GameHeading from "./Multiplayer/GameHeading";
 import GameControls from "./Multiplayer/GameControls";
 import GamePanel from "./GamePanel";
+import MultiplayerGameOverPopUP from "../PopUps/Multiplayer/MultiplayerGameOverPopUP";
 
 import GetUser from "../../utilities/GetUser";
 
 import styles from "../../styles/Game/MultiplayerGame.module.css";
-import { observer } from "mobx-react-lite";
 
 const MultiplayerGame = observer(({ game }) => {
   const router = useRouter();
@@ -20,6 +21,14 @@ const MultiplayerGame = observer(({ game }) => {
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState("");
   const [socket, setSocket] = useState(null);
+  const [popUp, setPopUp] = useState(false);
+  const [game_over, setGameOver] = useState({
+    winner: "",
+    reason: "",
+    playAgain: false,
+    opponnetWantToPlayAgain: "",
+  });
+  const [timeout_id, setTimeoutId] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -28,8 +37,11 @@ const MultiplayerGame = observer(({ game }) => {
     setSocket(newSocket);
 
     const updateScore = (score) => {
-      console.log(score);
       newSocket.emit("updateScore", gameId, score);
+    };
+
+    const endGame = (reason) => {
+      newSocket.emit("shouldGameEnd", gameId, reason);
     };
 
     newSocket.on("connect", () => {
@@ -42,6 +54,7 @@ const MultiplayerGame = observer(({ game }) => {
 
     newSocket.on("gameStart", () => {
       game.setScoreUpdate(updateScore);
+      game.setEndGameFunc(endGame);
       game.start();
       setStatus("");
     });
@@ -50,9 +63,32 @@ const MultiplayerGame = observer(({ game }) => {
       game.setOpponentScore(score);
     });
 
-    newSocket.on("gameEnd", (data) => {
-      console.log(data);
+    newSocket.on("gameEnd", (reason, winner, wantedToPlayAgain) => {
       game.stop();
+
+      if (wantedToPlayAgain) {
+        router.push("/");
+        return;
+      }
+
+      setPopUp(true);
+      setGameOver({
+        winner,
+        reason,
+        playAgain: !reason.includes("disconnected"),
+      });
+    });
+
+    newSocket.on("playAgainRequest", (data) => {
+      setGameOver((prev) => ({
+        ...prev,
+        opponnetWantToPlayAgain: data,
+      }));
+    });
+
+    newSocket.on("gameRestart", () => {
+      setPopUp(false);
+      game.start();
     });
 
     newSocket.on("disconnect", () => {
@@ -62,11 +98,18 @@ const MultiplayerGame = observer(({ game }) => {
     });
 
     newSocket.on("error", (data) => {
+      if (popUp) return;
+      console.log(popUp);
+
       alert(data);
 
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
+      if (!timeout_id) {
+        const timeout = setTimeout(() => {
+          router.push("/");
+        }, 2000);
+
+        setTimeoutId(timeout);
+      }
     });
 
     return () => {
@@ -90,10 +133,16 @@ const MultiplayerGame = observer(({ game }) => {
   }, []);
 
   const handleBackButton = () => {
+    if (popUp) return;
+
     if (socket) {
       socket.disconnect();
     }
     router.push("/");
+  };
+
+  const handlePlayAgain = () => {
+    socket.emit("playAgain", gameId);
   };
 
   return (
@@ -111,6 +160,16 @@ const MultiplayerGame = observer(({ game }) => {
         <GameControls game={game} status={status} />
         <GamePanel game={game} />
       </div>
+
+      {popUp && (
+        <MultiplayerGameOverPopUP
+          handlePlayAgain={handlePlayAgain}
+          winner={game_over.winner}
+          reason={game_over.reason}
+          playAgain={game_over.playAgain}
+          opponentWantToPlayAgain={game_over.opponnetWantToPlayAgain}
+        />
+      )}
     </div>
   );
 });
