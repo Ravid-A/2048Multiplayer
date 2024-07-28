@@ -1,0 +1,73 @@
+.game_heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.score {
+  background-color: #d2b48c;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  flex: 1;
+}
+
+.my_score {
+  margin-right: 10px;
+}
+
+.opp_score {
+  margin-left: 10px;
+}
+
+.time_display {
+  background-color: #a69b86;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  flex: 1;
+}
+
+.score p,
+.time_display p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #8b5e34;
+}
+
+.color_1 {
+  background-color: #ede0c8;
+}
+.color_2 {
+  background-color: #f2b179;
+}
+.color_3 {
+  background-color: #f59563;
+}
+.color_4 {
+  background-color: #f67c5f;
+}
+.color_5 {
+  background-color: #f65e3b;
+}
+.color_6 {
+  background-color: #edcf72;
+}
+.color_7 {
+  background-color: #edcc61;
+}
+.color_8 {
+  background-color: #edc850;
+}
+.color_9 {
+  background-color: #edc53f;
+}
+.color_10 {
+  background-color: #edc22e;
+}
+.color_11 {
+  background-color: #3c3a32;
+  color: red;
+}

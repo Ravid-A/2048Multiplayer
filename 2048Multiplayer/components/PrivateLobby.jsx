@@ -65,7 +65,9 @@ const PrivateLobby = ({ user }) => {
   }, [user]);
 
   const handleBackButton = () => {
-    if (gameId) return;
+    if (gameId) {
+      socket.emit("leavePrivateGame", gameId);
+    }
 
     if (socket) {
       socket.disconnect();
@@ -101,24 +103,35 @@ const PrivateLobby = ({ user }) => {
             <>
               <h2 className={styles.status}>{status}</h2>
               {opponent ? (
-                <div className={styles.opponent}>
-                  Opponent: {opponent.username}
+                <div className={styles.opponentInfo}>
+                  <h3>Opponent Name:</h3>
+                  <p>{opponent.username}</p>
                 </div>
               ) : (
-                <div className={styles.opponent}>Game ID: {gameId}</div>
+                <div className={styles.opponentInfo}>
+                  <h3>Game ID:</h3>
+                  <p>{gameId}</p>
+                </div>
               )}
             </>
           ) : (
             <>
               <h2 className={styles.status}>{status}</h2>
               <input
+                className={styles.input}
                 value={gameIdInput}
                 type="text"
                 placeholder="Enter lobby code"
                 onChange={(e) => setGameIdInput(e.target.value)}
               />
-              <button onClick={handleJoin}>Join</button>
-              <button onClick={handleCreate}>Create</button>
+              <div className={styles.buttons}>
+                <button className={styles.button} onClick={handleJoin}>
+                  Join
+                </button>
+                <button className={styles.button} onClick={handleCreate}>
+                  Create
+                </button>
+              </div>
               {error && <div className={styles.error}>{error}</div>}
             </>
           )}

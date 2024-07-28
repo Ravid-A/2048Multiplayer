@@ -1,4 +1,3 @@
-import e from "express";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -48,6 +47,12 @@ class GameServer {
       socket.on("joinPrivateGame", (gameId) =>
         this.joinPrivateGame(socket, gameId)
       );
+
+      socket.on("leavePrivateGame", (gameId) => {
+        if (this.privateGames.has(gameId)) {
+          this.privateGames.delete(gameId);
+        }
+      });
 
       socket.on("updateScore", (gameId, score) =>
         this.updateScore(socket, gameId, score)
@@ -99,6 +104,7 @@ class GameServer {
             () => this.timeUp(gameId),
             this.gameTimeLimit
           );
+          this.activeGames.set(gameId, game);
         }, 2000);
       }
 
@@ -232,15 +238,14 @@ class GameServer {
     this.endGame(gameId, reason, winner.socket);
   }
 
-  endGame(gameId, reason, winner) {
+  endGame(gameId, reason, winner, from_disconnected = false) {
     const game = this.activeGames.get(gameId);
     if (!game) return;
 
     clearTimeout(game.timerId);
+
     game.ended = true;
     this.activeGames.set(gameId, game);
-
-    const wantedToPlayAgain = this.playAgainRequests.has(gameId);
 
     game.players_sockets.forEach((playerSocket) => {
       if (playerSocket) {
@@ -248,7 +253,7 @@ class GameServer {
           "gameEnd",
           reason,
           winner.id === playerSocket.id,
-          wantedToPlayAgain
+          from_disconnected
         );
       }
     });
@@ -304,6 +309,7 @@ class GameServer {
       const player2 = game.players_sockets[1];
 
       game.scores = [0, 0];
+      game.timerId = setTimeout(() => this.timeUp(gameId), this.gameTimeLimit);
       this.activeGames.set(gameId, game);
 
       player1.emit("gameRestart");
@@ -334,7 +340,8 @@ class GameServer {
         this.endGame(
           gameId,
           `${socket.user.username} disconnected`,
-          opponentSocket
+          opponentSocket,
+          true
         );
         this.activeGames.delete(gameId);
       }

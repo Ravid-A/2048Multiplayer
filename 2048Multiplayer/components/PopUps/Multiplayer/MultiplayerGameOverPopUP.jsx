@@ -26,7 +26,7 @@ export default function MultiplayerGameOverPopUP({
   return (
     <div className={styles.PopUp}>
       <h1>Game Over!</h1>
-      <p>You have {winner ? "won" : "lost"}!</p>
+      {winner != null && <p>You have {winner ? "won" : "lost"}!</p>}
       <p>{reason}</p>
       <button onClick={handleReturn}>Go Home</button>
       {playAgain && (

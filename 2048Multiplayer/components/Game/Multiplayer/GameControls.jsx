@@ -3,9 +3,9 @@ import { useEffect } from "react";
 
 import { MoveDirection } from "../../../states/GameObserver";
 
-import styles from "../../../styles/Game/Offline/GameControls.module.css";
+import styles from "../../../styles/Game/Multiplayer/GameControls.module.css";
 
-const GameControls = ({ game, status }) => {
+const GameControls = ({ game }) => {
   const KeyToDirection = (key) => {
     switch (key) {
       case "ArrowUp":
@@ -40,15 +40,7 @@ const GameControls = ({ game, status }) => {
     };
   }, []);
 
-  return (
-    <>
-      {status && (
-        <div className={styles.game_controls}>
-          <div> {status} </div>
-        </div>
-      )}
-    </>
-  );
+  return <div className={styles.game_controls}></div>;
 };
 
 export default observer(GameControls);

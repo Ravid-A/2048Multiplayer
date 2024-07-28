@@ -8,7 +8,9 @@ import { observer } from "mobx-react-lite";
 import GameHeading from "./Multiplayer/GameHeading";
 import GameControls from "./Multiplayer/GameControls";
 import GamePanel from "./GamePanel";
+
 import MultiplayerGameOverPopUP from "../PopUps/Multiplayer/MultiplayerGameOverPopUP";
+import MultiplayerStatusPopUP from "../PopUps/Multiplayer/MultiplayerStatusPopUP";
 
 import GetUser from "../../utilities/GetUser";
 
@@ -21,14 +23,13 @@ const MultiplayerGame = observer(({ game }) => {
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState("");
   const [socket, setSocket] = useState(null);
-  const [popUp, setPopUp] = useState(false);
+  const [popUp, setPopUp] = useState("none");
   const [game_over, setGameOver] = useState({
     winner: "",
     reason: "",
     playAgain: false,
     opponnetWantToPlayAgain: "",
   });
-  const [timeout_id, setTimeoutId] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -50,6 +51,7 @@ const MultiplayerGame = observer(({ game }) => {
 
     newSocket.on("waitingForOpponent", () => {
       setStatus("Waiting for opponent...");
+      setPopUp("status");
     });
 
     newSocket.on("gameStart", () => {
@@ -57,25 +59,33 @@ const MultiplayerGame = observer(({ game }) => {
       game.setEndGameFunc(endGame);
       game.start();
       setStatus("");
+      setPopUp("none");
     });
 
     newSocket.on("opponentScore", (score) => {
       game.setOpponentScore(score);
     });
 
-    newSocket.on("gameEnd", (reason, winner, wantedToPlayAgain) => {
+    newSocket.on("gameEnd", (reason, winner, from_disconnected) => {
       game.stop();
 
-      if (wantedToPlayAgain) {
-        router.push("/");
+      if (from_disconnected) {
+        setPopUp("game_over");
+        setGameOver({
+          winner: null,
+          reason,
+          playAgain: false,
+          opponnetWantToPlayAgain: "",
+        });
         return;
       }
 
-      setPopUp(true);
+      setPopUp("game_over");
       setGameOver({
         winner,
         reason,
         playAgain: !reason.includes("disconnected"),
+        opponnetWantToPlayAgain: "",
       });
     });
 
@@ -87,7 +97,7 @@ const MultiplayerGame = observer(({ game }) => {
     });
 
     newSocket.on("gameRestart", () => {
-      setPopUp(false);
+      setPopUp("none");
       game.start();
     });
 
@@ -98,18 +108,11 @@ const MultiplayerGame = observer(({ game }) => {
     });
 
     newSocket.on("error", (data) => {
-      if (popUp) return;
-      console.log(popUp);
+      if (popUp != "none") return;
 
-      alert(data);
-
-      if (!timeout_id) {
-        const timeout = setTimeout(() => {
-          router.push("/");
-        }, 2000);
-
-        setTimeoutId(timeout);
-      }
+      game.stop();
+      setStatus(data);
+      setPopUp("error");
     });
 
     return () => {
@@ -133,7 +136,7 @@ const MultiplayerGame = observer(({ game }) => {
   }, []);
 
   const handleBackButton = () => {
-    if (popUp) return;
+    if (popUp != "none") return;
 
     if (socket) {
       socket.disconnect();
@@ -142,6 +145,10 @@ const MultiplayerGame = observer(({ game }) => {
   };
 
   const handlePlayAgain = () => {
+    setGameOver((prev) => ({
+      ...prev,
+      opponnetWantToPlayAgain: "You",
+    }));
     socket.emit("playAgain", gameId);
   };
 
@@ -157,11 +164,11 @@ const MultiplayerGame = observer(({ game }) => {
         </div>
 
         <GameHeading game={game} />
-        <GameControls game={game} status={status} />
+        <GameControls game={game} />
         <GamePanel game={game} />
       </div>
 
-      {popUp && (
+      {popUp == "game_over" && (
         <MultiplayerGameOverPopUP
           handlePlayAgain={handlePlayAgain}
           winner={game_over.winner}
@@ -169,6 +176,10 @@ const MultiplayerGame = observer(({ game }) => {
           playAgain={game_over.playAgain}
           opponentWantToPlayAgain={game_over.opponnetWantToPlayAgain}
         />
+      )}
+
+      {popUp != "none" && popUp != "game_over" && (
+        <MultiplayerStatusPopUP status={status} error={popUp == "error"} />
       )}
     </div>
   );
