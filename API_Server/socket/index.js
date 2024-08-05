@@ -88,6 +88,11 @@ class GameServer {
         return;
       }
 
+      if (!game.players_sockets.includes(null)) {
+        this.EmitError(socket, "Game is full");
+        return;
+      }
+
       const playerIndex = game.players.indexOf(user.id);
       game.players_sockets[playerIndex] = socket;
 
