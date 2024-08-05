@@ -13,6 +13,7 @@ import MultiplayerGameOverPopUP from "../PopUps/Multiplayer/MultiplayerGameOverP
 import MultiplayerStatusPopUP from "../PopUps/Multiplayer/MultiplayerStatusPopUP";
 
 import GetUser from "../../utilities/GetUser";
+import GetSocketUrl from "../../utilities/GetSocketUrl";
 
 import styles from "../../styles/Game/MultiplayerGame.module.css";
 
@@ -34,7 +35,7 @@ const MultiplayerGame = observer(({ game }) => {
   useEffect(() => {
     if (!user) return;
 
-    const newSocket = io("http://localhost:3002");
+    const newSocket = io(GetSocketUrl());
     setSocket(newSocket);
 
     const updateScore = (score) => {

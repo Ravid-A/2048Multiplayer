@@ -4,6 +4,8 @@ import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import io from "socket.io-client";
 
+import GetSocketUrl from "../utilities/GetSocketUrl";
+
 import styles from "../styles/Matchmaking.module.css";
 
 const Matchmaking = ({ user }) => {
@@ -17,7 +19,7 @@ const Matchmaking = ({ user }) => {
   useEffect(() => {
     if (!user) return;
 
-    const newSocket = io("http://localhost:3002");
+    const newSocket = io(GetSocketUrl());
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
