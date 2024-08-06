@@ -127,9 +127,13 @@ class GameServer {
     }
 
     if (this.waitingPlayers.size > 0) {
-      const opponent = Array.from(this.waitingPlayers)[
-        Math.floor(Math.random() * this.waitingPlayers.size)
-      ];
+      let opponent;
+
+      do {
+        opponent = Array.from(this.waitingPlayers)[
+          Math.floor(Math.random() * this.waitingPlayers.size)
+        ];
+      } while (opponent.user.id === socket.user.id);
 
       this.waitingPlayers.delete(opponent);
       socket.emit("waitingForOpponent");
@@ -156,6 +160,11 @@ class GameServer {
     const player1 = this.privateGames.get(gameId);
     if (!player1) {
       this.EmitError(player2, "Game ID does not exist");
+      return;
+    }
+
+    if (player1.user.id === player2.user.id) {
+      this.EmitError(player2, "You cannot join your own game");
       return;
     }
 
