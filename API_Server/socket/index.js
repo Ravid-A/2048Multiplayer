@@ -99,6 +99,10 @@ class GameServer {
       socket.emit("waitingForOpponent");
       if (!game.players_sockets.includes(null)) {
         setTimeout(() => {
+          const game = this.activeGames.get(gameId);
+
+          if(!game || game.ended) return;
+
           // emit game start to both players
           game.players_sockets.forEach((playerSocket) => {
             playerSocket.emit("gameStart");
@@ -255,7 +259,7 @@ class GameServer {
         playerSocket.emit(
           "gameEnd",
           reason,
-          winner.id === playerSocket.id,
+          winner?.id === playerSocket?.id,
           from_disconnected
         );
       }
