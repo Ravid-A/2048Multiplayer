@@ -121,35 +121,34 @@ class GameServer {
   }
 
   joinMatchmaking(socket) {
-    if (this.waitingPlayers.has(socket)) {
-      this.EmitError(socket, "You are already in the queue");
+    if (!this.waitingPlayers.has(socket)) {
+      this.waitingPlayers.add(socket);
+      socket.emit("waitingForOpponent");
+    } 
+
+    if (this.waitingPlayers.size == 1 ) 
+      return;
+
+    const opponent = Array.from(this.waitingPlayers)[
+      Math.floor(Math.random() * this.waitingPlayers.size)
+    ];
+
+    if (!opponent || opponent.user.id === socket.user.id) {
+      // wait 2 seconds and try again
+      console.log("Same guy", this.sockets.has(socket.id));
+      setTimeout(() => {
+        if(!this.sockets.has(socket.id)) return;
+        console.log("Trying to find another opponent");
+        this.joinMatchmaking(socket);
+      }, 2000);
       return;
     }
 
-    if (this.waitingPlayers.size > 0) {
-      const opponent = Array.from(this.waitingPlayers)[
-        Math.floor(Math.random() * this.waitingPlayers.size)
-      ];
-
-      if (opponent.user.id === socket.user.id) {
-        // wait 2 seconds and try again
-        setTimeout(() => {
-          if (!this.waitingPlayers.has(socket)) return;
-          console.log("Trying to find another opponent");
-          this.joinMatchmaking(socket);
-        }, 2000);
-        return;
-      }
-
-      this.waitingPlayers.delete(opponent);
-      socket.emit("waitingForOpponent");
-      setTimeout(() => {
-        this.createGame(socket, opponent);
-      }, 2000);
-    } else {
-      this.waitingPlayers.add(socket);
-      socket.emit("waitingForOpponent");
-    }
+    this.waitingPlayers.delete(opponent);
+    this.waitingPlayers.delete(socket);
+    setTimeout(() => {
+      this.createGame(socket, opponent);
+    }, 2000);
   }
 
   createPrivateGame(player1, gameId) {
@@ -333,6 +332,7 @@ class GameServer {
 
   handleDisconnect(socket) {
     this.waitingPlayers.delete(socket);
+    this.sockets.delete(socket.id);
 
     // go through active games and end the game if the player is in it
     this.activeGames.forEach((game, gameId) => {
