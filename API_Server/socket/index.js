@@ -124,21 +124,15 @@ class GameServer {
     if (!this.waitingPlayers.has(socket)) {
       this.waitingPlayers.add(socket);
       socket.emit("waitingForOpponent");
-    } 
-
-    if (this.waitingPlayers.size == 1 ) 
-      return;
+    }
 
     const opponent = Array.from(this.waitingPlayers)[
       Math.floor(Math.random() * this.waitingPlayers.size)
     ];
 
     if (!opponent || opponent.user.id === socket.user.id) {
-      // wait 2 seconds and try again
-      console.log("Same guy", this.sockets.has(socket.id));
       setTimeout(() => {
-        if(!this.sockets.has(socket.id)) return;
-        console.log("Trying to find another opponent");
+        if(!this.sockets.has(socket.id) || !this.waitingPlayers.has(socket)) return;
         this.joinMatchmaking(socket);
       }, 2000);
       return;
