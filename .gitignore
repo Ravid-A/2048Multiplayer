@@ -4,3 +4,5 @@ API_Server/.env
 snyk-linux
 *.pdf
 .vscode
+.DS_Store
+*.docx

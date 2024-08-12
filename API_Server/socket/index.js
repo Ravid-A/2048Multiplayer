@@ -101,7 +101,7 @@ class GameServer {
         setTimeout(() => {
           const game = this.activeGames.get(gameId);
 
-          if(!game || game.ended) return;
+          if (!game || game.ended) return;
 
           // emit game start to both players
           game.players_sockets.forEach((playerSocket) => {
@@ -136,7 +136,8 @@ class GameServer {
 
     if (!opponent || opponent.user.id === socket.user.id) {
       setTimeout(() => {
-        if(!this.sockets.has(socket.id) || !this.waitingPlayers.has(socket)) return;
+        if (!this.sockets.has(socket.id) || !this.waitingPlayers.has(socket))
+          return;
         this.joinMatchmaking(socket);
       }, 2000);
       return;
@@ -331,6 +332,18 @@ class GameServer {
   handleDisconnect(socket) {
     this.waitingPlayers.delete(socket);
     this.sockets.delete(socket.id);
+
+    this.privateGames.forEach((player1, gameId) => {
+      if (player1.id === socket.id) {
+        this.privateGames.delete(gameId);
+      }
+    });
+
+    this.playAgainRequests.forEach((requester, gameId) => {
+      if (requester.id === socket.id) {
+        this.playAgainRequests.delete(gameId);
+      }
+    });
 
     // go through active games and end the game if the player is in it
     this.activeGames.forEach((game, gameId) => {
